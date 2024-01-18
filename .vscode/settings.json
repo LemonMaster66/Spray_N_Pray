@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Run_n_Gun.sln"
+    "dotnet.defaultSolution": "Spray_N_Pray.sln"
 }
