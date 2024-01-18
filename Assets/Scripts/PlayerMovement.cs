@@ -17,8 +17,11 @@ public class PlayerMovement : MonoBehaviour
     private int MaxHealth = 5;
 
     [Header("States")]
-    public bool Grounded = true;
-    public bool Dead     = false;
+    public bool Grounded     = true;
+    public bool Dead         = false;
+    public bool Dashing      = false;
+    public bool Sliding      = false;
+    public bool FastFalling  = false;
 
     [Header("Debug Stats")]
     public Vector3     PlayerVelocity;
@@ -87,7 +90,7 @@ public class PlayerMovement : MonoBehaviour
         
 
         movement = (CamF * movementY + CamR * movementX).normalized;
-        rb.AddForce(movement * Speed + CamR);
+        rb.AddForce(movement * Speed);
 
         #region Debug Stats
             PlayerVelocity      = rb.velocity;
@@ -112,6 +115,26 @@ public class PlayerMovement : MonoBehaviour
     {
         if(context.started && Grounded && !Dead)
         {
+            rb.AddForce(Vector3.up * JumpForce, ForceMode.VelocityChange);
+        }
+    }
+
+    public void OnDash(InputAction.CallbackContext context)
+    {
+        if(context.started)
+        {
+            if(Dead) return;
+
+            //Debug.Log("Dash");
+        }
+    }
+
+    public void OnCrouch(InputAction.CallbackContext context)
+    {
+        if(context.started && !Dead)
+        {
+            if(Dead) return;
+
             rb.AddForce(Vector3.up * JumpForce, ForceMode.VelocityChange);
         }
     }
