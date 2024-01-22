@@ -41,6 +41,7 @@ public class PlayerMovement : MonoBehaviour
     #region Script / Component Reference
         [HideInInspector] public Rigidbody  rb;
         [HideInInspector] public Transform  Camera;
+        private Timers timers;
     #endregion
 
 
@@ -95,7 +96,6 @@ public class PlayerMovement : MonoBehaviour
             VelocityMagnitudeXZ = new Vector3(rb.velocity.x, 0, rb.velocity.z).magnitude;
         #endregion
 
-        if(Sliding)
         
         if(!Sliding && !Dead)
         {
