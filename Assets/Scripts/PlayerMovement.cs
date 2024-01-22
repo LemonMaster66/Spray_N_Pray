@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Properties")]
     public int  Health;
-    private int MaxHealth = 5;
+    private int MaxHealth = 100;
 
     [Header("States")]
     public bool Grounded     = true;
@@ -23,15 +23,20 @@ public class PlayerMovement : MonoBehaviour
     public bool Sliding      = false;
     public bool FastFalling  = false;
 
+    #region Debug States
+        [HideInInspector] public bool HoldingCrouch;
+    #endregion
+
     [Header("Debug Stats")]
     public Vector3     PlayerVelocity;
     private float      ForwardVelocityMagnitude;
     public float       VelocityMagnitudeXZ;
     [HideInInspector]  public Vector3 CamF;
     [HideInInspector]  public Vector3 CamR;
-    [HideInInspector]  public Vector3 movement;
-    [HideInInspector]  public float   movementX;
-    [HideInInspector]  public float   movementY;
+    [HideInInspector]  public Vector3 Movement;
+    [HideInInspector]  public float   MovementX;
+    [HideInInspector]  public float   MovementY;
+    [HideInInspector]  public float   _maxSpeed;
 
     #region Script / Component Reference
         [HideInInspector] public Rigidbody  rb;
@@ -49,7 +54,8 @@ public class PlayerMovement : MonoBehaviour
         rb.useGravity = false;
 
         //Property Values
-        Health = MaxHealth;
+        Health    = MaxHealth;
+        _maxSpeed = MaxSpeed;
     }
 
     void FixedUpdate()
@@ -68,6 +74,9 @@ public class PlayerMovement : MonoBehaviour
                 newVelocity.y = rb.velocity.y;
                 rb.velocity = newVelocity;
             }
+
+            if(Grounded) Speed = 400;
+            else         Speed = 60;
         #endregion
         //**********************************
         #region PerFrame Calculations
@@ -86,11 +95,13 @@ public class PlayerMovement : MonoBehaviour
             VelocityMagnitudeXZ = new Vector3(rb.velocity.x, 0, rb.velocity.z).magnitude;
         #endregion
 
-        if(Dead) return;
+        if(Sliding)
         
-
-        movement = (CamF * movementY + CamR * movementX).normalized;
-        rb.AddForce(movement * Speed);
+        if(!Sliding && !Dead)
+        {
+            Movement = (CamF * MovementY + CamR * MovementX).normalized;
+            rb.AddForce(Movement * Speed);
+        }
 
         #region Debug Stats
             PlayerVelocity      = rb.velocity;
@@ -104,11 +115,11 @@ public class PlayerMovement : MonoBehaviour
     //***********************************************************************
     //***********************************************************************
     //Movement Functions
-    public void OnMove(InputAction.CallbackContext movementValue)
+    public void OnMove(InputAction.CallbackContext MovementValue)
     {  
-        Vector2 inputVector = movementValue.ReadValue<Vector2>();
-        movementX = inputVector.x;
-        movementY = inputVector.y;
+        Vector2 inputVector = MovementValue.ReadValue<Vector2>();
+        MovementX = inputVector.x;
+        MovementY = inputVector.y;
     }
 
     public void OnJump(InputAction.CallbackContext context)
@@ -121,7 +132,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void OnDash(InputAction.CallbackContext context)
     {
-        if(context.started)
+        if(context.started && !Dead)
         {
             if(Dead) return;
 
@@ -133,9 +144,22 @@ public class PlayerMovement : MonoBehaviour
     {
         if(context.started && !Dead)
         {
-            if(Dead) return;
+            HoldingCrouch = true;
 
-            rb.AddForce(Vector3.up * JumpForce, ForceMode.VelocityChange);
+            if(!Grounded && !FastFalling)
+            {
+                FastFalling = true;
+
+                MaxSpeed = 0;
+
+                rb.AddForce(Vector3.down * 85, ForceMode.VelocityChange);
+            }
+            else if(Grounded) Sliding = true;
+        }
+        if(context.canceled)
+        {
+            HoldingCrouch = false;
+            Sliding = false;
         }
     }
 

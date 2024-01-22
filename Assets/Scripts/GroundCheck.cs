@@ -13,7 +13,11 @@ public class GroundCheck : MonoBehaviour
         if (other.gameObject == playerMovement.gameObject) return;
         playerMovement.SetGrounded(true);
         GroundObject = other.gameObject;
+
         Grounded = true;
+        if(playerMovement.FastFalling) playerMovement.MaxSpeed = playerMovement._maxSpeed;
+        playerMovement.FastFalling = false;
+        if(playerMovement.HoldingCrouch) playerMovement.Sliding = true;
 
         //playerSFX.LandAudio.Play();
     }
