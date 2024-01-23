@@ -97,11 +97,23 @@ public class PlayerMovement : MonoBehaviour
         #endregion
 
         
-        if(!Sliding && !Dead)
+        if(Sliding)
         {
-            Movement = (CamF * MovementY + CamR * MovementX).normalized;
-            rb.AddForce(Movement * Speed);
+            if(MovementX == 0 && MovementY == 0)
+            {
+                //rb.velocity += CamF *10; 
+            }
+            else
+            {
+                //rb.velocity += Movement *10;
+            }
+            return;
         }
+
+
+        
+        Movement = (CamF * MovementY + CamR * MovementX).normalized;
+        rb.AddForce(Movement * Speed);
 
         #region Debug Stats
             PlayerVelocity      = rb.velocity;
@@ -142,10 +154,12 @@ public class PlayerMovement : MonoBehaviour
 
     public void OnCrouch(InputAction.CallbackContext context)
     {
+        //Start Pressing Ctrl
         if(context.started && !Dead)
         {
             HoldingCrouch = true;
 
+            //Fast Fall
             if(!Grounded && !FastFalling)
             {
                 FastFalling = true;
@@ -154,12 +168,31 @@ public class PlayerMovement : MonoBehaviour
 
                 rb.AddForce(Vector3.down * 85, ForceMode.VelocityChange);
             }
-            else if(Grounded) Sliding = true;
+            //Slide
+            else if(Grounded)
+            {
+                Sliding = true;
+                MaxSpeed = 30;
+                GetComponent<Collider>().material.dynamicFriction = 0;
+
+                transform.localScale += new Vector3(0, -0.5f, 0);
+                transform.position += new Vector3(0,-0.5f,0);
+            }
         }
-        if(context.canceled)
+        //Stop Pressing Ctrl
+        if(context.canceled && !Dead)
         {
             HoldingCrouch = false;
-            Sliding = false;
+
+            if(Sliding) //Stop Sliding
+            {
+                Sliding = false;
+                MaxSpeed = _maxSpeed;
+                GetComponent<Collider>().material.dynamicFriction = 9;
+
+                transform.localScale += new Vector3(0, 0.5f, 0);
+                transform.position += new Vector3(0,0.5f,0);
+            }
         }
     }
 

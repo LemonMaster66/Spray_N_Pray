@@ -14,7 +14,6 @@ public class Timers : MonoBehaviour
     }
 
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         if(RollStorageTimer > 0) RollStorageTimerFunction();
