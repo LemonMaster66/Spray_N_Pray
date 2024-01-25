@@ -16,6 +16,8 @@ public class PlayerMovement : MonoBehaviour
     [Header("Properties")]
     public int  Health;
     private int MaxHealth = 100;
+    public float DashDuration = 0.35f;
+    public float DashPower = 10f;
 
     [Header("States")]
     public bool Grounded     = true;
@@ -39,6 +41,7 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector]  public float   MovementY;
     [HideInInspector]  public float   _maxSpeed;
     [HideInInspector]  public float   _speed;
+    [HideInInspector]  public float   _gravity;
 
     #region Script / Component Reference
         [HideInInspector] public Rigidbody  rb;
@@ -61,6 +64,7 @@ public class PlayerMovement : MonoBehaviour
         Health    = MaxHealth;
         _maxSpeed = MaxSpeed;
         _speed = Speed;
+        _gravity = Gravity;
     }
 
     void FixedUpdate()
@@ -101,7 +105,7 @@ public class PlayerMovement : MonoBehaviour
             if(Grounded) //Grounded
             {
                 Speed = _speed;
-                if(!Sliding)
+                if(!Sliding && !Dashing)
                 {
                     MaxSpeed = _maxSpeed;
                 }
@@ -117,7 +121,7 @@ public class PlayerMovement : MonoBehaviour
         #endregion
         //**********************************
 
-        if(!Sliding && !FastFalling)
+        if(!Sliding && !FastFalling && !Dashing)
         {
             Movement = (CamF * MovementY + CamR * MovementX).normalized;
             rb.AddForce(Movement * Speed);
@@ -148,17 +152,36 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.AddForce(Vector3.up * (JumpForce + timers.BeegJump), ForceMode.VelocityChange);
             if(Sliding) MaxSpeed += 20;
+            EndDash();
         }
     }
 
     public void OnDash(InputAction.CallbackContext context)
     {
-        if(context.started && !Dead)
+        if(context.started && !Dead && !Dashing)
         {
-            if(Dead) return;
+            Dashing = true;
+            Gravity = 0;
+            MaxSpeed = DashPower;
+            timers.DashTime = DashDuration;
 
-            //Debug.Log("Dash");
+            GetComponent<Collider>().material.dynamicFriction = 0;
+
+            if(MovementX == 0 && MovementY == 0)
+            {
+                Movement = CamF;
+            }
+
+            rb.velocity = Movement * 100;
         }
+    }
+    public void EndDash()
+    {
+        Dashing = false;
+        Gravity = _gravity;
+        MaxSpeed = _maxSpeed;
+
+        GetComponent<Collider>().material.dynamicFriction = 9;
     }
 
     public void OnCrouch(InputAction.CallbackContext context)
@@ -173,7 +196,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 FastFalling = true;
                 timers.BeegJumpStorage = true;
-                timers.BeegJumpStorageTime = 0.3f;
+                timers.BeegJumpStorageTime = 0.32f;
 
                 rb.velocity = new Vector3(0, rb.velocity.y, 0);
                 rb.AddForce(Vector3.down * 85, ForceMode.VelocityChange);

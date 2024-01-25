@@ -11,6 +11,9 @@ public class Timers : MonoBehaviour
     public float BeegJumpStorageTime;
     public bool  BeegJumpStorage;
 
+    [Header("Dash")]
+    public float DashTime;
+
     private void BeegJumpStorageFunction()
     {
         BeegJumpStorageTime -= Time.deltaTime;
@@ -21,19 +24,34 @@ public class Timers : MonoBehaviour
         }
         return;
     }
+    private void DashFunction()
+    {
+        DashTime -= Time.deltaTime;
+        if(DashTime <= 0.001f)
+        {
+            DashTime = 0;
+            playerMovement.EndDash();
+        }
+        return;
+    }
 
 
     void FixedUpdate()
     {
+        //Auto Countdown
         if(BeegJumpStorage) BeegJumpStorageFunction();
+        if(DashTime > 0) DashFunction();
 
-        if(playerMovement.FastFalling)                                       BeegJump += 0.3f;
-        else if(playerMovement.Grounded && BeegJump > 0 && !BeegJumpStorage) BeegJump -= 1f;
+        #region Fast Fall Logic
+            if(playerMovement.FastFalling)                                       BeegJump += 0.3f;
+            else if(playerMovement.Grounded && BeegJump > 0 && !BeegJumpStorage) BeegJump -= 1f;
+            if(BeegJump <= 0f) BeegJump = 0;
+        #endregion
 
         BeegJump = (float)Math.Round(BeegJump, 2);
         BeegJumpStorageTime = (float)Math.Round(BeegJumpStorageTime, 2);
 
-        if(BeegJump <= 0f) BeegJump = 0;
+        DashTime = (float)Math.Round(DashTime, 2);
     }
 
     void Awake()

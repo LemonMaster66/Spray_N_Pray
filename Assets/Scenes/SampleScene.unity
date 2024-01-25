@@ -1606,6 +1606,8 @@ MonoBehaviour:
   JumpForce: 22
   Gravity: 28
   Health: 0
+  DashDuration: 0.2
+  DashPower: 60
   Grounded: 1
   Dead: 0
   Dashing: 0
@@ -1621,6 +1623,7 @@ MonoBehaviour:
   MovementY: 0
   _maxSpeed: 0
   _speed: 0
+  _gravity: 0
   rb: {fileID: 0}
   Camera: {fileID: 0}
 --- !u!114 &1595419926
@@ -1636,6 +1639,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BeegJump: 0
+  BeegJumpStorageTime: 0
+  BeegJumpStorage: 0
+  DashTime: 0
 --- !u!1 &1665591426
 GameObject:
   m_ObjectHideFlags: 0
