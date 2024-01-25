@@ -1303,6 +1303,7 @@ GameObject:
   - component: {fileID: 1595419919}
   - component: {fileID: 1595419924}
   - component: {fileID: 1595419925}
+  - component: {fileID: 1595419926}
   - component: {fileID: 1595419923}
   m_Layer: 0
   m_Name: Player
@@ -1600,9 +1601,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 906ac6c86da74bf47848657bc89c9db0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 60
-  MaxSpeed: 15
-  JumpForce: 25
+  Speed: 400
+  MaxSpeed: 12
+  JumpForce: 22
   Gravity: 30
   Health: 0
   Grounded: 1
@@ -1619,8 +1620,22 @@ MonoBehaviour:
   MovementX: 0
   MovementY: 0
   _maxSpeed: 0
+  _speed: 0
   rb: {fileID: 0}
   Camera: {fileID: 0}
+--- !u!114 &1595419926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1595419918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a4432e3414899140a0a5811bfa7ce9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CoyoteTime: 0
 --- !u!1 &1665591426
 GameObject:
   m_ObjectHideFlags: 0
@@ -1956,7 +1971,6 @@ MonoBehaviour:
   playerMovement: {fileID: 1595419925}
   GroundObject: {fileID: 0}
   Grounded: 0
-  DeathScreenForSomeReason: {fileID: 0}
 --- !u!135 &2128628230
 SphereCollider:
   m_ObjectHideFlags: 0

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -37,6 +38,7 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector]  public float   MovementX;
     [HideInInspector]  public float   MovementY;
     [HideInInspector]  public float   _maxSpeed;
+    [HideInInspector]  public float   _speed;
 
     #region Script / Component Reference
         [HideInInspector] public Rigidbody  rb;
@@ -57,12 +59,13 @@ public class PlayerMovement : MonoBehaviour
         //Property Values
         Health    = MaxHealth;
         _maxSpeed = MaxSpeed;
+        _speed = Speed;
     }
 
     void FixedUpdate()
     {
         #region Physics Stuff
-            //Extra Gravity
+            //Gravity
             rb.AddForce(Physics.gravity * Gravity /10);
 
             //max speed
@@ -75,9 +78,6 @@ public class PlayerMovement : MonoBehaviour
                 newVelocity.y = rb.velocity.y;
                 rb.velocity = newVelocity;
             }
-
-            if(Grounded) Speed = 400;
-            else         Speed = 60;
         #endregion
         //**********************************
         #region PerFrame Calculations
@@ -95,25 +95,32 @@ public class PlayerMovement : MonoBehaviour
 
             VelocityMagnitudeXZ = new Vector3(rb.velocity.x, 0, rb.velocity.z).magnitude;
         #endregion
+        //**********************************
+        #region Conditions
+            if(Grounded) //Grounded
+            {
+                Speed = _speed;
+                if(!Sliding)
+                {
+                    MaxSpeed = _maxSpeed;
+                }
+            }
+            //Not Grounded
+            else if(!Grounded) Speed = 60;
 
-        
-        if(Sliding)
+            //Sliding
+            if(Sliding)
+            {
+                rb.velocity += Movement *8;
+            }
+        #endregion
+        //**********************************
+
+        if(!Sliding && !FastFalling)
         {
-            if(MovementX == 0 && MovementY == 0)
-            {
-                //rb.velocity += CamF *10; 
-            }
-            else
-            {
-                //rb.velocity += Movement *10;
-            }
-            return;
+            Movement = (CamF * MovementY + CamR * MovementX).normalized;
+            rb.AddForce(Movement * Speed);
         }
-
-
-        
-        Movement = (CamF * MovementY + CamR * MovementX).normalized;
-        rb.AddForce(Movement * Speed);
 
         #region Debug Stats
             PlayerVelocity      = rb.velocity;
@@ -139,6 +146,7 @@ public class PlayerMovement : MonoBehaviour
         if(context.started && Grounded && !Dead)
         {
             rb.AddForce(Vector3.up * JumpForce, ForceMode.VelocityChange);
+            if(Sliding) MaxSpeed += 20;
         }
     }
 
@@ -164,41 +172,49 @@ public class PlayerMovement : MonoBehaviour
             {
                 FastFalling = true;
 
-                MaxSpeed = 0;
-
+                rb.velocity = new Vector3(0, rb.velocity.y, 0);
                 rb.AddForce(Vector3.down * 85, ForceMode.VelocityChange);
             }
             //Slide
-            else if(Grounded)
-            {
-                Sliding = true;
-                MaxSpeed = 30;
-                GetComponent<Collider>().material.dynamicFriction = 0;
-
-                transform.localScale += new Vector3(0, -0.5f, 0);
-                transform.position += new Vector3(0,-0.5f,0);
-            }
+            else if(Grounded) SlideState(true);
         }
         //Stop Pressing Ctrl
         if(context.canceled && !Dead)
         {
             HoldingCrouch = false;
-
-            if(Sliding) //Stop Sliding
-            {
-                Sliding = false;
-                MaxSpeed = _maxSpeed;
-                GetComponent<Collider>().material.dynamicFriction = 9;
-
-                transform.localScale += new Vector3(0, 0.5f, 0);
-                transform.position += new Vector3(0,0.5f,0);
-            }
+            if(Sliding) SlideState(false);
         }
     }
 
     public void SetGrounded(bool state) 
     {
         Grounded = state;
+    }
+
+    public void SlideState(bool state)
+    {
+        if(state)
+        {
+            Sliding = true;
+            MaxSpeed = 30;
+            GetComponent<Collider>().material.dynamicFriction = 0;
+
+            transform.localScale += new Vector3(0, -1, 0);
+            rb.position += new Vector3(0,-1,0);
+
+            if(MovementX == 0 && MovementY == 0)
+            {
+                Movement = CamF;
+            }
+        }
+        else
+        {
+            Sliding = false;
+            GetComponent<Collider>().material.dynamicFriction = 9;
+
+            transform.localScale += new Vector3(0,1,0);
+            rb.position += new Vector3(0,1,0);
+        }
     }
 
     //***********************************************************************

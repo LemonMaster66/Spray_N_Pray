@@ -3,10 +3,16 @@ using UnityEngine;
 public class GroundCheck : MonoBehaviour
 {
     public PlayerMovement playerMovement;
+    private Timers timers;
+
     public GameObject GroundObject;
     public bool Grounded;
 
-    public GameObject DeathScreenForSomeReason;
+    void Awake()
+    {
+        //Assign Components
+        timers = GetComponentInParent<Timers>();
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -17,7 +23,6 @@ public class GroundCheck : MonoBehaviour
         Grounded = true;
         if(playerMovement.FastFalling) playerMovement.MaxSpeed = playerMovement._maxSpeed;
         playerMovement.FastFalling = false;
-        if(playerMovement.HoldingCrouch) playerMovement.Sliding = true;
 
         //playerSFX.LandAudio.Play();
     }

@@ -4,18 +4,26 @@ using UnityEngine;
 
 public class Timers : MonoBehaviour
 {
-    public float RollStorageTimer;
+    private PlayerMovement playerMovement;
 
-    private void RollStorageTimerFunction()
-    {
-        RollStorageTimer -= Time.deltaTime;
-        if(RollStorageTimer <= 0f) RollStorageTimer = 0;
-        return;
-    }
+    public float CoyoteTime;
+
+    // private void CoyoteTimeFunction()
+    // {
+    //     CoyoteTime -= Time.deltaTime;
+    //     if(CoyoteTime <= 0f) CoyoteTime = 0;
+    //     return;
+    // }
 
 
     void FixedUpdate()
     {
-        if(RollStorageTimer > 0) RollStorageTimerFunction();
+        //if(CoyoteTime > 0) CoyoteTimeFunction();
+    }
+
+    void Awake()
+    {
+        //Assign Components
+        playerMovement = GetComponent<PlayerMovement>();
     }
 }
