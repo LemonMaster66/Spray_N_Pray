@@ -23,6 +23,7 @@ public class GroundCheck : MonoBehaviour
         Grounded = true;
         if(playerMovement.FastFalling) playerMovement.MaxSpeed = playerMovement._maxSpeed;
         playerMovement.FastFalling = false;
+        playerMovement.LongJumping = false;
 
         //playerSFX.LandAudio.Play();
     }

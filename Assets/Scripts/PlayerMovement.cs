@@ -23,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
     public bool Grounded     = true;
     public bool Dead         = false;
     public bool Dashing      = false;
+    public bool LongJumping  = false;
     public bool Sliding      = false;
     public bool FastFalling  = false;
 
@@ -105,7 +106,7 @@ public class PlayerMovement : MonoBehaviour
             if(Grounded) //Grounded
             {
                 Speed = _speed;
-                if(!Sliding && !Dashing)
+                if(!Sliding && !Dashing && !LongJumping)
                 {
                     MaxSpeed = _maxSpeed;
                 }
@@ -150,9 +151,20 @@ public class PlayerMovement : MonoBehaviour
     {
         if(context.started && Grounded && !Dead)
         {
-            rb.AddForce(Vector3.up * (JumpForce + timers.BeegJump), ForceMode.VelocityChange);
-            if(Sliding) MaxSpeed += 20;
-            EndDash();
+            float JumpHieght = JumpForce;
+
+            if(Sliding)
+            {
+                MaxSpeed += 20;
+            }
+            else if(Dashing)
+            {
+                LongJumping = true;
+                JumpHieght -= 8;
+                MaxSpeed = 60;
+                EndDash();
+            }
+            rb.AddForce(Vector3.up * (JumpHieght + timers.BeegJump), ForceMode.VelocityChange);
         }
     }
 
@@ -179,7 +191,7 @@ public class PlayerMovement : MonoBehaviour
     {
         Dashing = false;
         Gravity = _gravity;
-        MaxSpeed = _maxSpeed;
+        if(!LongJumping) MaxSpeed = _maxSpeed;
 
         GetComponent<Collider>().material.dynamicFriction = 9;
     }

@@ -1611,6 +1611,7 @@ MonoBehaviour:
   Grounded: 1
   Dead: 0
   Dashing: 0
+  LongJumping: 0
   Sliding: 0
   FastFalling: 0
   HoldingCrouch: 0
