@@ -1604,7 +1604,7 @@ MonoBehaviour:
   Speed: 400
   MaxSpeed: 12
   JumpForce: 22
-  Gravity: 30
+  Gravity: 28
   Health: 0
   Grounded: 1
   Dead: 0
@@ -1635,7 +1635,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a4432e3414899140a0a5811bfa7ce9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CoyoteTime: 0
+  BeegJump: 0
 --- !u!1 &1665591426
 GameObject:
   m_ObjectHideFlags: 0

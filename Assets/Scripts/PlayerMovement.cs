@@ -51,6 +51,7 @@ public class PlayerMovement : MonoBehaviour
     {
         //Assign Components
         rb      = GetComponent<Rigidbody>();
+        timers  = GetComponent<Timers>();
         Camera  = GameObject.Find("Main Camera").transform;
 
         //Component Values
@@ -145,7 +146,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if(context.started && Grounded && !Dead)
         {
-            rb.AddForce(Vector3.up * JumpForce, ForceMode.VelocityChange);
+            rb.AddForce(Vector3.up * (JumpForce + timers.BeegJump), ForceMode.VelocityChange);
             if(Sliding) MaxSpeed += 20;
         }
     }
@@ -171,6 +172,8 @@ public class PlayerMovement : MonoBehaviour
             if(!Grounded && !FastFalling)
             {
                 FastFalling = true;
+                timers.BeegJumpStorage = true;
+                timers.BeegJumpStorageTime = 0.3f;
 
                 rb.velocity = new Vector3(0, rb.velocity.y, 0);
                 rb.AddForce(Vector3.down * 85, ForceMode.VelocityChange);
