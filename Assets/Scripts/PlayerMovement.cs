@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,12 +11,17 @@ public class PlayerMovement : MonoBehaviour
     public float Gravity    = 100;
 
     [Header("Properties")]
-    public int  Health;
-    private int MaxHealth = 100;
-    public float DashDuration = 0.35f;
-    public float DashPower = 10f;
+    public int    Health;
+    private int   MaxHealth = 100;
+    [Space(10)]
+    public float  DashCount = 3;
+    public float  DashDuration = 0.2f;
+    public float  DashPower = 10f;
+    [Space(10)]
+    public float  SlideJumpPower = 3;
 
     [Header("States")]
+    public bool CanMove      = true;
     public bool Grounded     = true;
     public bool Dead         = false;
     public bool Dashing      = false;
@@ -29,34 +31,41 @@ public class PlayerMovement : MonoBehaviour
 
     #region Debug States
         [HideInInspector] public bool HoldingCrouch;
+        [HideInInspector] public bool HasJumped;
     #endregion
 
-    [Header("Debug Stats")]
-    public Vector3     PlayerVelocity;
-    private float      ForwardVelocityMagnitude;
-    public float       VelocityMagnitudeXZ;
-    [HideInInspector]  public Vector3 CamF;
-    [HideInInspector]  public Vector3 CamR;
-    [HideInInspector]  public Vector3 Movement;
-    [HideInInspector]  public float   MovementX;
-    [HideInInspector]  public float   MovementY;
-    [HideInInspector]  public float   _maxSpeed;
-    [HideInInspector]  public float   _speed;
-    [HideInInspector]  public float   _gravity;
-
+    #region Debug States
+        [Header("Debug Stats")]
+        public Vector3     PlayerVelocity;
+        public float       VelocityMagnitudeXZ;
+        [HideInInspector]  public Vector3 CamF;
+        [HideInInspector]  public Vector3 CamR;
+        [HideInInspector]  public Vector3 Movement;
+        [HideInInspector]  public float   MovementX;
+        [HideInInspector]  public float   MovementY;
+        [HideInInspector]  public float   _speed;
+        [HideInInspector]  public float   _maxSpeed;
+        [HideInInspector]  public float   _gravity;
+    #endregion
+    
     #region Script / Component Reference
-        [HideInInspector] public Rigidbody  rb;
-        [HideInInspector] public Transform  Camera;
-        private Timers timers;
+        [HideInInspector] public Rigidbody    rb;
+        [HideInInspector] public Transform    Camera;
+
+        private Timers       timers;
+        private GroundCheck  groundCheck;
     #endregion
 
 
     void Awake()
     {
         //Assign Components
-        rb      = GetComponent<Rigidbody>();
-        timers  = GetComponent<Timers>();
         Camera  = GameObject.Find("Main Camera").transform;
+        rb      = GetComponent<Rigidbody>();
+
+        //Assign Scripts
+        groundCheck  = GetComponentInChildren<GroundCheck>();
+        timers  = GetComponent<Timers>();
 
         //Component Values
         rb.useGravity = false;
@@ -87,6 +96,7 @@ public class PlayerMovement : MonoBehaviour
         #endregion
         //**********************************
         #region PerFrame Calculations
+            //Camera Orientation
             CamF = Camera.forward;
             CamR = Camera.right;
             CamF.y = 0;
@@ -94,46 +104,47 @@ public class PlayerMovement : MonoBehaviour
             CamF = CamF.normalized;
             CamR = CamR.normalized;
 
-            // Calculate the Forward velocity magnitude
-            Vector3 ForwardVelocity = Vector3.Project(rb.velocity, CamF);
-            ForwardVelocityMagnitude = ForwardVelocity.magnitude;
-            ForwardVelocityMagnitude = (float)Math.Round(ForwardVelocityMagnitude, 2);
-
+            //Rigidbody Velocity Magnitude on the X/Z Axis
             VelocityMagnitudeXZ = new Vector3(rb.velocity.x, 0, rb.velocity.z).magnitude;
+
+            //Dash Managment
+            if(DashCount < 3 && !Sliding) DashCount+=0.015f;
+            if(DashCount > 3) DashCount = 3;
+            if(DashCount < 0) DashCount = 0;
+
+            if(Grounded && SlideJumpPower > 30 && timers.SlideJumpStorage == 0) SlideJumpPower -= 3;
+            if(SlideJumpPower < 30) SlideJumpPower = 30;
         #endregion
         //**********************************
         #region Conditions
-            if(Grounded) //Grounded
-            {
-                Speed = _speed;
-                if(!Sliding && !Dashing && !LongJumping)
-                {
-                    MaxSpeed = _maxSpeed;
-                }
-            }
-            //Not Grounded
-            else if(!Grounded) Speed = 60;
+            if(Grounded) Speed = _speed; //Grounded
+            else if(!Grounded) Speed = 60; //Not Grounded
 
             //Sliding
-            if(Sliding)
-            {
-                rb.velocity += Movement *8;
-            }
+            if(Sliding) rb.velocity += Movement *8;
+            //Fast Falling
+            if(FastFalling) timers.BeegJumpStorageTime = 0.25f;
+
+            //CanMove Check
+            if(Sliding || FastFalling || Dashing) CanMove = false;
+            else CanMove = true;
         #endregion
         //**********************************
 
-        if(!Sliding && !FastFalling && !Dashing)
+        // Main Movement Code
+        if(CanMove)
         {
             Movement = (CamF * MovementY + CamR * MovementX).normalized;
             rb.AddForce(Movement * Speed);
         }
 
-        #region Debug Stats
+        #region Rounding Values
             PlayerVelocity      = rb.velocity;
             PlayerVelocity.x    = (float)Math.Round(PlayerVelocity.x, 2);
             PlayerVelocity.y    = (float)Math.Round(PlayerVelocity.y, 2);
             PlayerVelocity.z    = (float)Math.Round(PlayerVelocity.z, 2);
             VelocityMagnitudeXZ = (float)Math.Round(VelocityMagnitudeXZ, 2);
+            DashCount           = (float)Math.Round(DashCount, 2);
         #endregion
     }
 
@@ -149,30 +160,56 @@ public class PlayerMovement : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if(context.started && Grounded && !Dead)
+        if(context.started && !Dead)
         {
-            float JumpHieght = JumpForce;
-
-            if(Sliding)
-            {
-                MaxSpeed += 20;
-            }
-            else if(Dashing)
-            {
-                LongJumping = true;
-                JumpHieght -= 8;
-                MaxSpeed = 60;
-                EndDash();
-            }
-            rb.AddForce(Vector3.up * (JumpHieght + timers.BeegJump), ForceMode.VelocityChange);
+            if((Grounded || timers.CoyoteTime > 0) && !HasJumped) Jump();
+            else if(!Grounded || timers.CoyoteTime == 0) timers.JumpBuffer = 0.15f;
         }
     }
+    public void Jump()
+    {
+        HasJumped = true;
+        float JumpHeight = JumpForce;
+
+        if(Dashing && DashCount > 1)
+        {
+            LongJumping = true;
+            JumpHeight -= 8;
+            MaxSpeed = 70;
+            DashCount -= 1;
+            EndDash();
+        }
+        if(Sliding)
+        {
+            SlideJumpPower += (VelocityMagnitudeXZ/2) + timers.BeegJump;
+            if(SlideJumpPower > 120) SlideJumpPower = 120;
+            MaxSpeed = _maxSpeed + SlideJumpPower;
+
+            rb.AddForce(Movement * SlideJumpPower*1000);
+
+            timers.BeegJump = 0;
+
+            SlideState(false);
+        }
+        rb.AddForce(Vector3.up * (JumpHeight + timers.BeegJump), ForceMode.VelocityChange);
+    }
+
+    public void SetGrounded(bool state) 
+    {
+        Grounded = state;
+    }
+
+    //***********************************************************************
+    //***********************************************************************
+    //Abilities
 
     public void OnDash(InputAction.CallbackContext context)
     {
-        if(context.started && !Dead && !Dashing)
+        if(context.started && !Dead && !Dashing && DashCount > 1)
         {
             Dashing = true;
+            LongJumping = false;
+            DashCount -= 1;
             Gravity = 0;
             MaxSpeed = DashPower;
             timers.DashTime = DashDuration;
@@ -203,12 +240,17 @@ public class PlayerMovement : MonoBehaviour
         {
             HoldingCrouch = true;
 
+            if(!Grounded)
+            {
+                timers.SlideBuffer = 0.12f;
+            }
+
             //Fast Fall
             if(!Grounded && !FastFalling)
             {
                 FastFalling = true;
                 timers.BeegJumpStorage = true;
-                timers.BeegJumpStorageTime = 0.32f;
+                timers.BeegJumpStorageTime = 0.25f;
 
                 rb.velocity = new Vector3(0, rb.velocity.y, 0);
                 rb.AddForce(Vector3.down * 85, ForceMode.VelocityChange);
@@ -223,12 +265,6 @@ public class PlayerMovement : MonoBehaviour
             if(Sliding) SlideState(false);
         }
     }
-
-    public void SetGrounded(bool state) 
-    {
-        Grounded = state;
-    }
-
     public void SlideState(bool state)
     {
         if(state)
@@ -252,11 +288,8 @@ public class PlayerMovement : MonoBehaviour
 
             transform.localScale += new Vector3(0,1,0);
             rb.position += new Vector3(0,1,0);
+
+            //if(Grounded) groundCheck.GroundState(true);
         }
     }
-
-    //***********************************************************************
-    //***********************************************************************
-    //Other Functions
-
 }
