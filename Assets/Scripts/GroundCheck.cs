@@ -29,7 +29,11 @@ public class GroundCheck : MonoBehaviour
             playerMovement.FastFalling = false;
             playerMovement.LongJumping = false;
 
-            if(playerMovement.FastFalling) playerMovement.MaxSpeed = playerMovement._maxSpeed;
+            if(playerMovement.FastFalling)
+            {
+                playerMovement.MaxSpeed = playerMovement._maxSpeed;
+                timers.BeegJump += 1;
+            }
             if(!playerMovement.Sliding && !playerMovement.Dashing && !playerMovement.LongJumping)
             {
                 playerMovement.MaxSpeed = playerMovement._maxSpeed;
@@ -48,6 +52,10 @@ public class GroundCheck : MonoBehaviour
 
         if(timers.JumpBuffer  > 0 && !playerMovement.LongJumping) playerMovement.Jump();
         if(timers.SlideBuffer > 0) playerMovement.SlideState(true);
+        if(playerMovement.VelocityMagnitudeXZ > playerMovement._maxSpeed+5)
+        {
+            playerMovement.SlideJumpPower = playerMovement.VelocityMagnitudeXZ;
+        }
 
         timers.SlideJumpStorage = 0.2f;
 

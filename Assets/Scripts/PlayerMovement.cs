@@ -108,17 +108,16 @@ public class PlayerMovement : MonoBehaviour
             VelocityMagnitudeXZ = new Vector3(rb.velocity.x, 0, rb.velocity.z).magnitude;
 
             //Dash Managment
-            if(DashCount < 3 && !Sliding) DashCount+=0.015f;
+            if(DashCount < 3 && !Sliding) DashCount += 0.015f;
             if(DashCount > 3) DashCount = 3;
             if(DashCount < 0) DashCount = 0;
 
-            if(Grounded && SlideJumpPower > 30 && timers.SlideJumpStorage == 0) SlideJumpPower -= 3;
-            if(SlideJumpPower < 30) SlideJumpPower = 30;
+            if(Grounded && SlideJumpPower > 5 && timers.SlideJumpStorage == 0) SlideJumpPower = 5;
         #endregion
         //**********************************
         #region Conditions
             if(Grounded) Speed = _speed; //Grounded
-            else if(!Grounded) Speed = 60; //Not Grounded
+            else if(!Grounded) Speed = 35; //Not Grounded
 
             //Sliding
             if(Sliding) rb.velocity += Movement *8;
@@ -181,13 +180,11 @@ public class PlayerMovement : MonoBehaviour
         }
         if(Sliding)
         {
-            SlideJumpPower += (VelocityMagnitudeXZ/2) + timers.BeegJump;
+            SlideJumpPower += (VelocityMagnitudeXZ/5) + timers.BeegJump;
             if(SlideJumpPower > 120) SlideJumpPower = 120;
             MaxSpeed = _maxSpeed + SlideJumpPower;
 
             rb.AddForce(Movement * SlideJumpPower*1000);
-
-            timers.BeegJump = 0;
 
             SlideState(false);
         }
@@ -243,6 +240,7 @@ public class PlayerMovement : MonoBehaviour
             if(!Grounded)
             {
                 timers.SlideBuffer = 0.12f;
+                SlideJumpPower = VelocityMagnitudeXZ;
             }
 
             //Fast Fall
@@ -267,19 +265,16 @@ public class PlayerMovement : MonoBehaviour
     }
     public void SlideState(bool state)
     {
-        if(state)
+        if(state && HoldingCrouch)
         {
             Sliding = true;
-            MaxSpeed = 30;
+            MaxSpeed = _maxSpeed +5;
             GetComponent<Collider>().material.dynamicFriction = 0;
 
             transform.localScale += new Vector3(0, -1, 0);
             rb.position += new Vector3(0,-1,0);
 
-            if(MovementX == 0 && MovementY == 0)
-            {
-                Movement = CamF;
-            }
+            if(MovementX == 0 && MovementY == 0) Movement = CamF;
         }
         else
         {
@@ -289,7 +284,7 @@ public class PlayerMovement : MonoBehaviour
             transform.localScale += new Vector3(0,1,0);
             rb.position += new Vector3(0,1,0);
 
-            //if(Grounded) groundCheck.GroundState(true);
+            if(!HasJumped) groundCheck.GroundState(true);
         }
     }
 }
