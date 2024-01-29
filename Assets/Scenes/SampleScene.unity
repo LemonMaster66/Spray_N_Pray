@@ -1214,6 +1214,7 @@ GameObject:
   - component: {fileID: 945361807}
   - component: {fileID: 945361809}
   - component: {fileID: 945361810}
+  - component: {fileID: 945361811}
   m_Layer: 0
   m_Name: Cinemachine Camera
   m_TagString: Untagged
@@ -1309,6 +1310,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HideOnStart: 1
+--- !u!114 &945361811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 945361806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad52647acecc2314aba65a7b593ec97f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cinemachineVirtualCamera: {fileID: 945361807}
+  TargetDutch: 0
+  Blend: 0
 --- !u!1001 &1183043397
 PrefabInstance:
   m_ObjectHideFlags: 0
