@@ -28,18 +28,13 @@ public class GroundCheck : MonoBehaviour
             playerMovement.HasJumped = false;
             playerMovement.FastFalling = false;
             playerMovement.LongJumping = false;
+            playerMovement.SlideJumping = false;
 
-            if(playerMovement.FastFalling)
-            {
-                playerMovement.MaxSpeed = playerMovement._maxSpeed;
-                timers.BeegJump += 1;
-            }
+            if(playerMovement.FastFalling) playerMovement.MaxSpeed = playerMovement._maxSpeed;
             if(!playerMovement.Sliding && !playerMovement.Dashing && !playerMovement.LongJumping)
             {
                 playerMovement.MaxSpeed = playerMovement._maxSpeed;
             }
-
-            //playerSFX.LandAudio.Play();
         }
         else timers.CoyoteTime = 0.3f;
     }
@@ -50,16 +45,16 @@ public class GroundCheck : MonoBehaviour
         playerMovement.SetGrounded(true);
         GroundObject = other.gameObject;
 
+        timers.SlideJumpStorage = 0.2f;
+
+        GroundState(true);
+
         if(timers.JumpBuffer  > 0 && !playerMovement.LongJumping) playerMovement.Jump();
         if(timers.SlideBuffer > 0) playerMovement.SlideState(true);
         if(playerMovement.VelocityMagnitudeXZ > playerMovement._maxSpeed+5)
         {
             playerMovement.SlideJumpPower = playerMovement.VelocityMagnitudeXZ;
         }
-
-        timers.SlideJumpStorage = 0.2f;
-
-        GroundState(true);
     }
 
     private void OnTriggerExit(Collider other)

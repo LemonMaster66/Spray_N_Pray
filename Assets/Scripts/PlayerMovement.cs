@@ -21,23 +21,25 @@ public class PlayerMovement : MonoBehaviour
     public float  SlideJumpPower = 3;
 
     [Header("States")]
-    public bool CanMove      = true;
-    public bool Grounded     = true;
-    public bool Dead         = false;
-    public bool Dashing      = false;
-    public bool LongJumping  = false;
-    public bool Sliding      = false;
-    public bool FastFalling  = false;
+    public bool CanMove       = true;
+    public bool Grounded      = true;
+    public bool Dead          = false;
+    public bool Dashing       = false;
+    public bool LongJumping   = false;
+    public bool SlideJumping  = false;
+    public bool Sliding       = false;
+    public bool FastFalling   = false;
+    public bool HasJumped     = false;
 
     #region Debug States
         [HideInInspector] public bool HoldingCrouch;
-        [HideInInspector] public bool HasJumped;
     #endregion
 
-    #region Debug States
+    #region Debug Stats
         [Header("Debug Stats")]
         public Vector3     PlayerVelocity;
         public float       VelocityMagnitudeXZ;
+        public float       ForwardVelocityMagnitude;
         [HideInInspector]  public Vector3 CamF;
         [HideInInspector]  public Vector3 CamR;
         [HideInInspector]  public Vector3 Movement;
@@ -107,6 +109,11 @@ public class PlayerMovement : MonoBehaviour
             //Rigidbody Velocity Magnitude on the X/Z Axis
             VelocityMagnitudeXZ = new Vector3(rb.velocity.x, 0, rb.velocity.z).magnitude;
 
+            // Calculate the Forward velocity magnitude
+            Vector3 ForwardVelocity = Vector3.Project(rb.velocity, CamF);
+            ForwardVelocityMagnitude = ForwardVelocity.magnitude;
+            ForwardVelocityMagnitude = (float)Math.Round(ForwardVelocityMagnitude, 2);
+
             //Dash Managment
             if(DashCount < 3 && !Sliding) DashCount += 0.015f;
             if(DashCount > 3) DashCount = 3;
@@ -169,7 +176,9 @@ public class PlayerMovement : MonoBehaviour
     {
         HasJumped = true;
         float JumpHeight = JumpForce;
+        timers.BeegJump += 3;
 
+        //Long Jump
         if(Dashing && DashCount > 1)
         {
             LongJumping = true;
@@ -178,8 +187,11 @@ public class PlayerMovement : MonoBehaviour
             DashCount -= 1;
             EndDash();
         }
+        //Slide Jump
         if(Sliding)
         {
+            SlideJumping = true;
+
             SlideJumpPower += (VelocityMagnitudeXZ/5) + timers.BeegJump;
             if(SlideJumpPower > 120) SlideJumpPower = 120;
             MaxSpeed = _maxSpeed + SlideJumpPower;
@@ -188,7 +200,9 @@ public class PlayerMovement : MonoBehaviour
 
             SlideState(false);
         }
-        rb.AddForce(Vector3.up * (JumpHeight + timers.BeegJump), ForceMode.VelocityChange);
+
+        if(!SlideJumping) JumpHeight += timers.BeegJump;
+        rb.AddForce(Vector3.up * JumpHeight, ForceMode.VelocityChange);
     }
 
     public void SetGrounded(bool state) 
@@ -211,12 +225,12 @@ public class PlayerMovement : MonoBehaviour
             MaxSpeed = DashPower;
             timers.DashTime = DashDuration;
 
+            SlideJumpPower  = 0;
+            timers.BeegJump = 0;
+
             GetComponent<Collider>().material.dynamicFriction = 0;
 
-            if(MovementX == 0 && MovementY == 0)
-            {
-                Movement = CamF;
-            }
+            if(MovementX == 0 && MovementY == 0) Movement = CamF;
 
             rb.velocity = Movement * 100;
         }
@@ -249,6 +263,7 @@ public class PlayerMovement : MonoBehaviour
                 FastFalling = true;
                 timers.BeegJumpStorage = true;
                 timers.BeegJumpStorageTime = 0.25f;
+                timers.BeegJump /= 3f;
 
                 rb.velocity = new Vector3(0, rb.velocity.y, 0);
                 rb.AddForce(Vector3.down * 85, ForceMode.VelocityChange);

@@ -80,7 +80,7 @@ public class Timers : MonoBehaviour
         if(DashTime > 0)          DashFunction();
 
         #region Fast Fall Logic
-            if(playerMovement.FastFalling) BeegJump += 0.3f;
+            if(playerMovement.FastFalling) BeegJump += 0.4f;
             else if(playerMovement.Grounded && BeegJump > 0 && !BeegJumpStorage) BeegJump = 0;
             if(BeegJump <= 0f) BeegJump = 0;
         #endregion

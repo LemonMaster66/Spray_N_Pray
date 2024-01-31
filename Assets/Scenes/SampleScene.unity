@@ -589,7 +589,7 @@ Camera:
     height: 1
   near clip plane: 0.25
   far clip plane: 1000
-  field of view: 65
+  field of view: 65.05009
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -1243,11 +1243,11 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 1595419922}
   m_Lens:
-    FieldOfView: 65
+    FieldOfView: 65.05009
     OrthographicSize: 5
     NearClipPlane: 0.25
     FarClipPlane: 1000
-    Dutch: 0
+    Dutch: -3e-45
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
@@ -1322,9 +1322,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad52647acecc2314aba65a7b593ec97f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cinemachineVirtualCamera: {fileID: 945361807}
+  CMvc: {fileID: 945361807}
   TargetDutch: 0
-  Blend: 0
+  TargetFOV: 65
 --- !u!1001 &1183043397
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1574,7 +1574,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 4, y: 3, z: 10.96}
-  m_LocalScale: {x: 0.5, y: 8, z: 15}
+  m_LocalScale: {x: 1, y: 8, z: 15}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1641,8 +1641,8 @@ GameObject:
   - component: {fileID: 1595419920}
   - component: {fileID: 1595419919}
   - component: {fileID: 1595419924}
-  - component: {fileID: 1595419926}
   - component: {fileID: 1595419925}
+  - component: {fileID: 1595419926}
   - component: {fileID: 1595419923}
   m_Layer: 0
   m_Name: Player
@@ -1955,12 +1955,14 @@ MonoBehaviour:
   Dead: 0
   Dashing: 0
   LongJumping: 0
+  SlideJumping: 0
   Sliding: 0
   FastFalling: 0
-  HoldingCrouch: 0
   HasJumped: 1
+  HoldingCrouch: 0
   PlayerVelocity: {x: 0, y: 0, z: 0}
   VelocityMagnitudeXZ: 0
+  ForwardVelocityMagnitude: 0
   CamF: {x: 0, y: 0, z: 0}
   CamR: {x: 0, y: 0, z: 0}
   Movement: {x: 0, y: 0, z: 0}
