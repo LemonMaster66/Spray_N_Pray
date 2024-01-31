@@ -448,7 +448,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.058, z: 0}
-  m_LocalScale: {x: 1.05, y: 1, z: 1.05}
+  m_LocalScale: {x: 1.05, y: 0.91, z: 1.05}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1595419922}
@@ -483,7 +483,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 172379931}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1950,13 +1950,14 @@ MonoBehaviour:
   DashDuration: 0.2
   DashPower: 60
   SlideJumpPower: 3
-  CanMove: 1
   Grounded: 1
+  AgainstWall: 1
+  CanMove: 1
   Dead: 0
   Dashing: 0
   LongJumping: 0
-  SlideJumping: 0
   Sliding: 0
+  SlideJumping: 0
   FastFalling: 0
   HasJumped: 1
   HoldingCrouch: 0
@@ -1985,9 +1986,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a4432e3414899140a0a5811bfa7ce9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BeegJump: 0
-  BeegJumpStorageTime: 0
-  BeegJumpStorage: 0
+  SlamJump: 0
+  SlamJumpStorageTime: 0
+  SlamJumpStorage: 0
   DashTime: 0
   SlideJumpPower: 0
   SlideJumpStorage: 0

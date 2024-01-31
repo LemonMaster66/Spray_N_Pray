@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     public float JumpForce  = 8;
     public float Gravity    = 100;
 
+
     [Header("Properties")]
     public int    Health;
     private int   MaxHealth = 100;
@@ -20,20 +21,23 @@ public class PlayerMovement : MonoBehaviour
     [Space(10)]
     public float  SlideJumpPower = 3;
 
-    [Header("States")]
-    public bool CanMove       = true;
-    public bool Grounded      = true;
-    public bool Dead          = false;
-    public bool Dashing       = false;
-    public bool LongJumping   = false;
-    public bool SlideJumping  = false;
-    public bool Sliding       = false;
-    public bool FastFalling   = false;
-    public bool HasJumped     = false;
 
-    #region Debug States
-        [HideInInspector] public bool HoldingCrouch;
-    #endregion
+    [Header("States")]
+    public bool Grounded       = true;
+    public bool AgainstWall    = true;
+
+    public bool CanMove        = true;
+    public bool Dead           = false;
+
+    public bool Dashing        = false;
+    public bool LongJumping    = false;
+    public bool Sliding        = false;
+    public bool SlideJumping   = false;
+    public bool FastFalling    = false;
+
+    public bool HasJumped      = false;
+    public bool HoldingCrouch  = false;
+
 
     #region Debug Stats
         [Header("Debug Stats")]
@@ -49,6 +53,7 @@ public class PlayerMovement : MonoBehaviour
         [HideInInspector]  public float   _maxSpeed;
         [HideInInspector]  public float   _gravity;
     #endregion
+    
     
     #region Script / Component Reference
         [HideInInspector] public Rigidbody    rb;
@@ -129,7 +134,7 @@ public class PlayerMovement : MonoBehaviour
             //Sliding
             if(Sliding) rb.velocity += Movement *8;
             //Fast Falling
-            if(FastFalling) timers.BeegJumpStorageTime = 0.25f;
+            if(FastFalling) timers.SlamJumpStorageTime = 0.25f;
 
             //CanMove Check
             if(Sliding || FastFalling || Dashing) CanMove = false;
@@ -176,7 +181,7 @@ public class PlayerMovement : MonoBehaviour
     {
         HasJumped = true;
         float JumpHeight = JumpForce;
-        timers.BeegJump += 3;
+        timers.SlamJump += 3;
 
         //Long Jump
         if(Dashing && DashCount > 1)
@@ -192,7 +197,7 @@ public class PlayerMovement : MonoBehaviour
         {
             SlideJumping = true;
 
-            SlideJumpPower += (VelocityMagnitudeXZ/5) + timers.BeegJump;
+            SlideJumpPower += (VelocityMagnitudeXZ/5) + timers.SlamJump;
             if(SlideJumpPower > 120) SlideJumpPower = 120;
             MaxSpeed = _maxSpeed + SlideJumpPower;
 
@@ -201,7 +206,7 @@ public class PlayerMovement : MonoBehaviour
             SlideState(false);
         }
 
-        if(!SlideJumping) JumpHeight += timers.BeegJump;
+        if(!SlideJumping) JumpHeight += timers.SlamJump;
         rb.AddForce(Vector3.up * JumpHeight, ForceMode.VelocityChange);
     }
 
@@ -226,7 +231,7 @@ public class PlayerMovement : MonoBehaviour
             timers.DashTime = DashDuration;
 
             SlideJumpPower  = 0;
-            timers.BeegJump = 0;
+            timers.SlamJump = 0;
 
             GetComponent<Collider>().material.dynamicFriction = 0;
 
@@ -261,9 +266,9 @@ public class PlayerMovement : MonoBehaviour
             if(!Grounded && !FastFalling)
             {
                 FastFalling = true;
-                timers.BeegJumpStorage = true;
-                timers.BeegJumpStorageTime = 0.25f;
-                timers.BeegJump /= 3f;
+                timers.SlamJumpStorage = true;
+                timers.SlamJumpStorageTime = 0.25f;
+                timers.SlamJump /= 3f;
 
                 rb.velocity = new Vector3(0, rb.velocity.y, 0);
                 rb.AddForce(Vector3.down * 85, ForceMode.VelocityChange);

@@ -6,9 +6,9 @@ public class Timers : MonoBehaviour
     private PlayerMovement playerMovement;
 
     [Header("Jump Chaining")]
-    public float BeegJump;
-    public float BeegJumpStorageTime;
-    public bool  BeegJumpStorage;
+    public float SlamJump;
+    public float SlamJumpStorageTime;
+    public bool  SlamJumpStorage;
 
     [Header("Dash")]
     public float DashTime;
@@ -22,13 +22,13 @@ public class Timers : MonoBehaviour
     public float JumpBuffer;
     public float SlideBuffer;
 
-    private void BeegJumpStorageFunction()
+    private void SlamJumpStorageFunction()
     {
-        BeegJumpStorageTime -= Time.deltaTime;
-        if(BeegJumpStorageTime < 0)
+        SlamJumpStorageTime -= Time.deltaTime;
+        if(SlamJumpStorageTime < 0)
         {
-            BeegJumpStorageTime = 0;
-            BeegJumpStorage = false;
+            SlamJumpStorageTime = 0;
+            SlamJumpStorage = false;
         }
         return;
     }
@@ -72,7 +72,7 @@ public class Timers : MonoBehaviour
     void FixedUpdate()
     {
         //Auto Countdown
-        if(BeegJumpStorage)       BeegJumpStorageFunction();
+        if(SlamJumpStorage)       SlamJumpStorageFunction();
         if(CoyoteTime > 0)        CoyoteTimeFunction();
         if(JumpBuffer > 0)        JumpBufferFunction();
         if(SlideJumpStorage > 0)  SlideJumpStorageFunction();
@@ -80,14 +80,14 @@ public class Timers : MonoBehaviour
         if(DashTime > 0)          DashFunction();
 
         #region Fast Fall Logic
-            if(playerMovement.FastFalling) BeegJump += 0.4f;
-            else if(playerMovement.Grounded && BeegJump > 0 && !BeegJumpStorage) BeegJump = 0;
-            if(BeegJump <= 0f) BeegJump = 0;
+            if(playerMovement.FastFalling) SlamJump += 0.4f;
+            else if(playerMovement.Grounded && SlamJump > 0 && !SlamJumpStorage) SlamJump = 0;
+            if(SlamJump <= 0f) SlamJump = 0;
         #endregion
 
         #region Rounding Values
-            BeegJumpStorageTime = (float)Math.Round(BeegJumpStorageTime, 2);
-            BeegJump            = (float)Math.Round(BeegJump, 2);
+            SlamJumpStorageTime = (float)Math.Round(SlamJumpStorageTime, 2);
+            SlamJump            = (float)Math.Round(SlamJump, 2);
             DashTime            = (float)Math.Round(DashTime, 2);
             CoyoteTime          = (float)Math.Round(CoyoteTime, 2);
             JumpBuffer          = (float)Math.Round(JumpBuffer, 2);
