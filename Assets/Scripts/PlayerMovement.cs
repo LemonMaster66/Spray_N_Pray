@@ -128,7 +128,7 @@ public class PlayerMovement : MonoBehaviour
         #endregion
         //**********************************
         #region Conditions
-            if(Grounded) Speed = _speed; //Grounded
+            if(Grounded) Speed = _speed;   //Grounded
             else if(!Grounded) Speed = 35; //Not Grounded
 
             //Sliding

@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class Shotgun : Gun
 {
-    public override void FireStarted()
+    public override void AltFireStarted()
     {
-        base.FireStarted();
+        
     }
+
 }

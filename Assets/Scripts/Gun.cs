@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System;
 
 [System.Serializable]
 public class Gun : MonoBehaviour
@@ -21,6 +22,7 @@ public class Gun : MonoBehaviour
 
     [Header("Properties")]
     public float Damage;               // Damage on Hit                                             |  0 = None
+    public float MinDamage;            // The Damage Applied at Max Falloff Distance                |  0 = None
     public int   Ammo;                 // Bullets Shot Before Reloading                             |  0 = Unlimited
     public float AttackSpeed;          // Time Between Shots                                        |  0 = 1 Frame
     public float ReloadSpeed;          // Time Taken to Reload                                      |  0 = Instant
@@ -45,18 +47,23 @@ public class Gun : MonoBehaviour
     public float ExplosionKnockback;   // The Force Applied to the Target away from the Explosion
 
     [Header("States")]
-    public bool CanShoot;
+    public bool CanShoot = true;
+    public bool AttackCooldown;
     public bool Reloading;
     public bool HoldingShoot;
 
+    [Header("Info")]
+    public float finalDamage;
+    public float attackCooldowntime;
+    public float currentAmmo;
+
     #region Debug Values
         private Transform       GunTip;
-        public Transform       Camera;
+        private Transform       Camera;
         private Rigidbody       rb;
         private PlayerMovement  playerMovement;
 
         [HideInInspector] public float _damage;
-        [HideInInspector] public float _ammo;
     #endregion
 
 
@@ -66,6 +73,21 @@ public class Gun : MonoBehaviour
         Camera          = GameObject.Find("Main Camera").transform;
         rb              = GetComponent<Rigidbody>();
         playerMovement  = FindFirstObjectByType<PlayerMovement>();
+        
+        currentAmmo = Ammo;
+    }
+
+    void FixedUpdate()
+    {
+        if(AttackCooldown) attackCooldowntime -= Time.deltaTime;
+        if(attackCooldowntime < 0)
+        {
+            AttackCooldown = false;
+            attackCooldowntime = 0;
+        }
+
+        finalDamage        = (float)Math.Round(finalDamage, 2);
+        attackCooldowntime = (float)Math.Round(attackCooldowntime, 2);
     }
 
 
@@ -74,27 +96,43 @@ public class Gun : MonoBehaviour
         HoldingShoot = true;
         Vector3 shootVector = Camera.transform.forward;
 
+        // Checks
+        if(!CanShoot || AttackCooldown) return;
+
+        // Values
+        AttackCooldown = true;
+        attackCooldowntime += AttackSpeed;
+
         if(!Projectile)
         {
-            Debug.DrawRay(Camera.transform.position, shootVector*5, Color.red, 1);
+            Debug.DrawRay(Camera.transform.position, shootVector*FalloffDistance, Color.red, 1);
             RaycastHit hit;
             if(Physics.Raycast(Camera.transform.position, shootVector, out hit))
             {
-                Debug.Log(hit.collider.name + " from: " + transform.gameObject.name);
+                finalDamage = Damage;
 
-                if(hit.rigidbody != null) hit.rigidbody.AddForce(-hit.normal * Knockback);
+                // Damage Distance Falloff
+                if(FalloffDistance != 0)
+                {
+                    float falloffFactor = Mathf.Clamp01(Mathf.SmoothStep(0, 1, 1 - (hit.distance / FalloffDistance)));
+                    finalDamage = Mathf.Lerp(MinDamage, Damage, falloffFactor);
+                }
+
+
+                // Knockback
+                if(hit.rigidbody != null) hit.rigidbody.AddForce(-hit.normal * Knockback *10);
             }
         }
     }
     
     public virtual void FireEnded()
     {
-        
+        HoldingShoot = false;
     }
 
     public virtual void AltFireStarted()
     {
-        
+        Debug.Log("Shoot Gun");
     }
     public virtual void AltFireEnded()
     {

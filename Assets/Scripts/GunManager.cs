@@ -9,30 +9,22 @@ public class GunManager : MonoBehaviour
     public int ActiveGun = 0;
 
 
+    void Awake()
+    {
+        SwapGun(ActiveGun);
+    }
     
 
     public void OnFire(InputAction.CallbackContext context)
     {
-        if(context.started)
-        {
-            Guns[ActiveGun].GetComponent<Gun>().FireStarted();
-        }
-        else if(context.canceled)
-        {
-            Guns[ActiveGun].GetComponent<Gun>().FireEnded();
-        }
+        if(context.started)       Guns[ActiveGun].GetComponent<Gun>().FireStarted();
+        else if(context.canceled) Guns[ActiveGun].GetComponent<Gun>().FireEnded();
     }
 
     public void OnAltFire(InputAction.CallbackContext context)
     {
-        if(context.started)
-        {
-            Debug.Log("AltFire");
-        }
-        else if(context.canceled)
-        {
-
-        }
+        if(context.started)       Guns[ActiveGun].GetComponent<Gun>().AltFireStarted();
+        else if(context.canceled) Guns[ActiveGun].GetComponent<Gun>().AltFireEnded();
     }
 
     public void OnScroll(InputAction.CallbackContext context)
@@ -54,11 +46,11 @@ public class GunManager : MonoBehaviour
 
     public void SwapGun(int GunChoice)
     {
-        Debug.Log("Swapping to: " + Guns[ActiveGun]);
+        Debug.Log("Swapping to: " + Guns[GunChoice]);
         for(int i = 0; i < Guns.Length; i++)
         {
             Guns[i].SetActive(false);
-            if(i == ActiveGun) Guns[i].SetActive(true);
+            if(i == GunChoice) Guns[i].SetActive(true);
         }
     }
 }
