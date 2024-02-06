@@ -25685,3 +25685,19 @@ Received Import Request.
 Start importing Assets/Prefabs/Bullet.prefab using Guid(e0224ef4f3ebd914b8baf7aac618fdab) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '41a0598f7547c041ebf425b24220f9a1') in 0.2824021 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 30
 
+========================================================================
+Received Import Request.
+  Time since last request: 867.749587 seconds.
+  path: Assets/Prefabs/Bullet.prefab
+  artifactKey: Guid(e0224ef4f3ebd914b8baf7aac618fdab) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Bullet.prefab using Guid(e0224ef4f3ebd914b8baf7aac618fdab) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '32be6b13b3dfd1087fbc5d4f61ded79b') in 0.0104205 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 30
+
+========================================================================
+Received Import Request.
+  Time since last request: 35.811940 seconds.
+  path: Assets/Prefabs/Bullet.prefab
+  artifactKey: Guid(e0224ef4f3ebd914b8baf7aac618fdab) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Bullet.prefab using Guid(e0224ef4f3ebd914b8baf7aac618fdab) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '2f81c72e9d41014c9f5d4382d66e61dd') in 0.0086199 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 30
+

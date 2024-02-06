@@ -85,6 +85,8 @@ public class Gun : MonoBehaviour
         {
             AttackCooldown = false;
             attackCooldowntime = 0;
+            
+            if(HoldingShoot && Automatic) FireStarted();
         }
 
         finalDamage        = (float)Math.Round(finalDamage, 2);

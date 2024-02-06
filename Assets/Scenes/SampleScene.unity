@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 99183663}
   - component: {fileID: 99183666}
   - component: {fileID: 99183665}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Glasses
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -431,7 +431,7 @@ GameObject:
   - component: {fileID: 172379935}
   - component: {fileID: 172379934}
   - component: {fileID: 172379933}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Wall Collisions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -609,7 +609,7 @@ GameObject:
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
   - component: {fileID: 330585548}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -779,7 +779,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 335979411}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: GunTip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -881,7 +881,7 @@ GameObject:
   - component: {fileID: 386553922}
   - component: {fileID: 386553921}
   - component: {fileID: 386553923}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Gun 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -965,11 +965,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 386553917}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89e0931f8287e174c9ae25057fd8a12b, type: 3}
+  m_Script: {fileID: 11500000, guid: 32d9bf9df97d4e245be4d3931007326d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   BulletPrefab: {fileID: 1917465348466676881, guid: e0224ef4f3ebd914b8baf7aac618fdab,
     type: 3}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 55
   Projectile: 0
   Automatic: 0
   DestroyOnImpact: 0
@@ -978,16 +981,16 @@ MonoBehaviour:
   CanParryBullet: 0
   DamageFallOff: 0
   IgniteEnemies: 0
-  Damage: 20
+  Damage: 0
   MinDamage: 0
   Ammo: 0
-  AttackSpeed: 1.25
+  AttackSpeed: 0
   ReloadSpeed: 0
   MultiShot: 0
   MultiShotInterval: 0
   Spread: 0
-  Knockback: 20
-  FalloffDistance: 15
+  Knockback: 0
+  FalloffDistance: 0
   FalloffTime: 0
   Ricochete: 0
   Penetrate: 0
@@ -1018,7 +1021,7 @@ GameObject:
   - component: {fileID: 409915977}
   - component: {fileID: 409915976}
   - component: {fileID: 409915975}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: cm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1262,7 +1265,7 @@ GameObject:
   - component: {fileID: 835425836}
   - component: {fileID: 835425834}
   - component: {fileID: 835425837}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: cm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1392,7 +1395,7 @@ GameObject:
   - component: {fileID: 858681411}
   - component: {fileID: 858681410}
   - component: {fileID: 858681409}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: cm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1520,7 +1523,7 @@ GameObject:
   - component: {fileID: 945361809}
   - component: {fileID: 945361810}
   - component: {fileID: 945361811}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cinemachine Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1642,7 +1645,7 @@ GameObject:
   - component: {fileID: 962196530}
   - component: {fileID: 962196529}
   - component: {fileID: 962196531}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Gun 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1731,6 +1734,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BulletPrefab: {fileID: 1917465348466676881, guid: e0224ef4f3ebd914b8baf7aac618fdab,
     type: 3}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 51
   Projectile: 0
   Automatic: 0
   DestroyOnImpact: 0
@@ -1746,7 +1752,7 @@ MonoBehaviour:
   ReloadSpeed: 0
   MultiShot: 0
   MultiShotInterval: 0
-  Spread: 0.45
+  Spread: 10
   Knockback: 7
   FalloffDistance: 0
   FalloffTime: 0
@@ -1881,7 +1887,7 @@ GameObject:
   - component: {fileID: 1126089054}
   - component: {fileID: 1126089053}
   - component: {fileID: 1126089052}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Gun 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1918,9 +1924,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BulletPrefab: {fileID: 1917465348466676881, guid: e0224ef4f3ebd914b8baf7aac618fdab,
     type: 3}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 55
   Projectile: 0
-  Automatic: 0
-  DestroyOnImpact: 0
+  Automatic: 1
+  DestroyOnImpact: 1
   ExploadOnImpact: 0
   ExplodeAfterTime: 0
   CanParryBullet: 0
@@ -1929,12 +1938,12 @@ MonoBehaviour:
   Damage: 0
   MinDamage: 0
   Ammo: 0
-  AttackSpeed: 2.51
+  AttackSpeed: 0.015
   ReloadSpeed: 0
   MultiShot: 0
   MultiShotInterval: 0
-  Spread: 0
-  Knockback: 34.48
+  Spread: 50
+  Knockback: 6
   FalloffDistance: 0
   FalloffTime: 0
   Ricochete: 0
@@ -2084,7 +2093,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1190297333}
   - component: {fileID: 1190297334}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: GunPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2137,7 +2146,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1275889803}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: GunTip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2169,7 +2178,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1278749491}
   - component: {fileID: 1278749492}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: TopRig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2481,7 +2490,7 @@ GameObject:
   - component: {fileID: 1510630092}
   - component: {fileID: 1510630091}
   - component: {fileID: 1510630090}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Gun 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2518,6 +2527,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BulletPrefab: {fileID: 1917465348466676881, guid: e0224ef4f3ebd914b8baf7aac618fdab,
     type: 3}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 55
   Projectile: 0
   Automatic: 0
   DestroyOnImpact: 0
@@ -2873,7 +2885,7 @@ GameObject:
   - component: {fileID: 1595419925}
   - component: {fileID: 1595419926}
   - component: {fileID: 1595419923}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3221,7 +3233,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1607209156}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: GunTip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3253,7 +3265,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1665591427}
   - component: {fileID: 1665591428}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: BottomRig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3332,7 +3344,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1974412657}
   - component: {fileID: 1974412658}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: MiddleRig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3410,7 +3422,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1977416617}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: GunTip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3444,7 +3456,7 @@ GameObject:
   - component: {fileID: 2051210713}
   - component: {fileID: 2051210712}
   - component: {fileID: 2051210711}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: cm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3572,7 +3584,7 @@ GameObject:
   - component: {fileID: 2128628231}
   - component: {fileID: 2128628230}
   - component: {fileID: 2128628229}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3622,7 +3634,7 @@ SphereCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
