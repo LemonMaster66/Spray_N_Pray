@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using System;
 
-[System.Serializable]
+[Serializable]
 public class Gun : MonoBehaviour
 {
     [Header("References")]
@@ -95,6 +95,13 @@ public class Gun : MonoBehaviour
     {
         HoldingShoot = true;
         Vector3 shootVector = Camera.transform.forward;
+        if(Spread != 0)
+        {
+            shootVector.x += UnityEngine.Random.Range(Spread, -Spread);
+            shootVector.y += UnityEngine.Random.Range(Spread, -Spread);
+            shootVector.z += UnityEngine.Random.Range(Spread, -Spread);
+        }
+
 
         // Checks
         if(!CanShoot || AttackCooldown) return;
@@ -105,11 +112,13 @@ public class Gun : MonoBehaviour
 
         if(!Projectile)
         {
-            Debug.DrawRay(Camera.transform.position, shootVector*FalloffDistance, Color.red, 1);
             RaycastHit hit;
             if(Physics.Raycast(Camera.transform.position, shootVector, out hit))
             {
                 finalDamage = Damage;
+
+                GameObject bullet = Instantiate(BulletPrefab, GunTip.position, Quaternion.identity);
+                bullet.transform.position = hit.transform.position;
 
                 // Damage Distance Falloff
                 if(FalloffDistance != 0)
