@@ -17,14 +17,14 @@ public class GunManager : MonoBehaviour
 
     public void OnFire(InputAction.CallbackContext context)
     {
-        if(context.started)       Guns[ActiveGun].GetComponent<Gun>().FireStarted();
-        else if(context.canceled) Guns[ActiveGun].GetComponent<Gun>().FireEnded();
+        if(context.started)       Guns[ActiveGun].GetComponent<Gun>().ShootStart();
+        else if(context.canceled) Guns[ActiveGun].GetComponent<Gun>().ShootEnd();
     }
 
     public void OnAltFire(InputAction.CallbackContext context)
     {
-        if(context.started)       Guns[ActiveGun].GetComponent<Gun>().AltFireStarted();
-        else if(context.canceled) Guns[ActiveGun].GetComponent<Gun>().AltFireEnded();
+        if(context.started)       Guns[ActiveGun].GetComponent<Gun>().AltShootStart();
+        else if(context.canceled) Guns[ActiveGun].GetComponent<Gun>().AltShootEnd();
     }
 
     public void OnScroll(InputAction.CallbackContext context)

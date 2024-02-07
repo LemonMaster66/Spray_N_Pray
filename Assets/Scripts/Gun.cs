@@ -57,6 +57,7 @@ public class Gun : MonoBehaviour
     public float finalDamage;
     public float attackCooldowntime;
     public float currentAmmo;
+    public float currentMultiShot;
 
     #region Debug Values
         private Transform       GunTip;
@@ -85,8 +86,8 @@ public class Gun : MonoBehaviour
         {
             AttackCooldown = false;
             attackCooldowntime = 0;
-            
-            if(HoldingShoot && Automatic) FireStarted();
+
+            if(HoldingShoot && Automatic) ShootStart();
         }
 
         finalDamage        = (float)Math.Round(finalDamage, 2);
@@ -94,83 +95,99 @@ public class Gun : MonoBehaviour
     }
 
 
-    public virtual void FireStarted()
+    public virtual void ShootStart()
     {
         HoldingShoot = true;
-        Vector3 shootVector = Camera.transform.forward;
-        if(Spread != 0)
-        {
-            shootVector.x += UnityEngine.Random.Range(Spread/200, -Spread/200);
-            shootVector.y += UnityEngine.Random.Range(Spread/200, -Spread/200);
-            shootVector.z += UnityEngine.Random.Range(Spread/200, -Spread/200);
-        }
 
         // Checks
-        if(!CanShoot || AttackCooldown) return;
+        if (!CanShoot || AttackCooldown) return;
 
         // Values
         AttackCooldown = true;
         attackCooldowntime += AttackSpeed;
 
+        // MultiShot
+        if(MultiShot == 0) StartCoroutine(Shoot(0));
+        if(MultiShot != 0)
+        {
+            for (int i = 0; i < MultiShot; i++)
+            {
+                StartCoroutine(Shoot(i * MultiShotInterval));
+            }
+        }
+    }
+    private IEnumerator Shoot(float interval)
+    {
+        yield return new WaitForSeconds(interval);
+
+        Vector3 shootVector = Camera.transform.forward;
+        if (Spread != 0)
+        {
+            shootVector.x += UnityEngine.Random.Range(-Spread / 200, Spread / 200);
+            shootVector.y += UnityEngine.Random.Range(-Spread / 200, Spread / 200);
+            shootVector.z += UnityEngine.Random.Range(-Spread / 200, Spread / 200);
+        }
+
         //****************************************************************
         //Hitscan
-        if(!Projectile)
+        if (!Projectile)
         {
             //**********************************
             // Hit
-            if(Physics.Raycast(Camera.transform.position, shootVector, out RaycastHit hit, layerMask))
+            if (Physics.Raycast(Camera.transform.position, shootVector, out RaycastHit hit, layerMask))
             {
                 finalDamage = Damage;
 
                 GameObject bullet = Instantiate(BulletPrefab, GunTip.position, Quaternion.identity);
                 bullet.transform.parent = hit.transform;
-                StartCoroutine(SpawnTrail(bullet, hit.point));
+                StartCoroutine(SpawnBullet(bullet, hit.point));
 
+                #region Extra Logic
                 // Damage Distance Falloff
-                if(FalloffDistance != 0)
+                if (FalloffDistance != 0)
                 {
                     float falloffFactor = Mathf.Clamp01(Mathf.SmoothStep(0, 1, 1 - (hit.distance / FalloffDistance)));
                     finalDamage = Mathf.Lerp(MinDamage, Damage, falloffFactor);
                 }
-
-
                 // Knockback
-                if(hit.rigidbody != null) hit.rigidbody.AddForce(-hit.normal * Knockback *10);
+                if (hit.rigidbody != null) hit.rigidbody.AddForce(-hit.normal * Knockback * 10);
+                #endregion
             }
 
             //**********************************
             // Epic Miss
-            else 
+            else
             {
                 finalDamage = 0;
                 GameObject bullet = Instantiate(BulletPrefab, GunTip.position, Quaternion.identity);
                 bullet.transform.parent = hit.transform;
-                StartCoroutine(SpawnTrail(bullet, shootVector*1000));
+                StartCoroutine(SpawnBullet(bullet, shootVector * 1000));
             }
         }
     }
     
-    public virtual void FireEnded()
+    public virtual void ShootEnd()
     {
         HoldingShoot = false;
     }
 
-    public virtual void AltFireStarted()
+    public virtual void AltShootStart()
     {
-        Debug.Log("Shoot Gun");
+        //Debug.Log("Shoot Gun");
     }
-    public virtual void AltFireEnded()
+    public virtual void AltShootEnd()
     {
         
     }
 
-    private IEnumerator SpawnTrail(GameObject bullet, Vector3 HitPoint)
+    private IEnumerator SpawnBullet(GameObject bullet, Vector3 HitPoint)
     {
         float time = 0;
         Vector3 startPos = bullet.transform.position;
 
         while(time < 1)
         {
+            startPos = GunTip.position;
             bullet.transform.position = Vector3.Lerp(startPos, HitPoint, time);
             time += Time.deltaTime*3 / 0.1f;
             
@@ -179,6 +196,6 @@ public class Gun : MonoBehaviour
         bullet.transform.position = HitPoint;
         //Spawn Hit Particle
 
-        if(DestroyOnImpact) Destroy(bullet.gameObject, 0.2f);
+        if(DestroyOnImpact) Destroy(bullet.gameObject, 0.1f);
     }
 }

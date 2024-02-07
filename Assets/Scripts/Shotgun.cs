@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Shotgun : Gun
 {
-    public override void AltFireStarted()
+    public override void AltShootStart()
     {
         
     }
