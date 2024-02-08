@@ -1753,8 +1753,8 @@ MonoBehaviour:
   ReloadSpeed: 0
   MultiShot: 0
   MultiShotInterval: 0
-  Spread: 2.5
-  Knockback: 7
+  Spread: 0
+  Knockback: 10
   FalloffDistance: 0
   FalloffTime: 0
   Ricochete: 0
@@ -2534,8 +2534,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 51
   Projectile: 0
-  Automatic: 0
-  DestroyOnImpact: 1
+  Automatic: 1
+  DestroyOnImpact: 0
   ExploadOnImpact: 0
   ExplodeAfterTime: 0
   CanParryBullet: 0
@@ -2544,12 +2544,12 @@ MonoBehaviour:
   Damage: 0
   MinDamage: 0
   Ammo: 0
-  AttackSpeed: 2.51
+  AttackSpeed: 0
   ReloadSpeed: 0
   MultiShot: 0
   MultiShotInterval: 0
   Spread: 0
-  Knockback: 100
+  Knockback: 0
   FalloffDistance: 0
   FalloffTime: 0
   Ricochete: 0

@@ -140,7 +140,7 @@ public class Gun : MonoBehaviour
 
                 GameObject bullet = Instantiate(BulletPrefab, GunTip.position, Quaternion.identity);
                 bullet.transform.parent = hit.transform;
-                StartCoroutine(SpawnBullet(bullet, hit.point));
+                StartCoroutine(SpawnBullet(bullet, hit.point, hit));
 
                 #region Extra Logic
                 // Damage Distance Falloff
@@ -161,7 +161,7 @@ public class Gun : MonoBehaviour
                 finalDamage = 0;
                 GameObject bullet = Instantiate(BulletPrefab, GunTip.position, Quaternion.identity);
                 bullet.transform.parent = hit.transform;
-                StartCoroutine(SpawnBullet(bullet, shootVector * 1000));
+                StartCoroutine(SpawnBullet(bullet, shootVector * 1000, hit));
             }
         }
     }
@@ -180,11 +180,11 @@ public class Gun : MonoBehaviour
         
     }
 
-    private IEnumerator SpawnBullet(GameObject bullet, Vector3 HitPoint)
+    private IEnumerator SpawnBullet(GameObject bullet, Vector3 HitPoint, RaycastHit hit)
     {
         float time = 0;
-        Vector3 startPos = bullet.transform.position;
-
+        Vector3 startPos;
+        
         while(time < 1)
         {
             startPos = GunTip.position;
@@ -196,6 +196,6 @@ public class Gun : MonoBehaviour
         bullet.transform.position = HitPoint;
         //Spawn Hit Particle
 
-        if(DestroyOnImpact) Destroy(bullet.gameObject, 0.1f);
+        if(DestroyOnImpact || (hit.collider != null && hit.collider.gameObject.layer == 3)) Destroy(bullet.gameObject, 0.1f);
     }
 }
