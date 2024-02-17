@@ -72,7 +72,7 @@ public class Timers : MonoBehaviour
     void FixedUpdate()
     {
         //Auto Countdown
-        if(SlamJumpStorage)       SlamJumpStorageFunction();
+        if(SlamJumpStorage)      SlamJumpStorageFunction();
         if(CoyoteTime > 0)        CoyoteTimeFunction();
         if(JumpBuffer > 0)        JumpBufferFunction();
         if(SlideJumpStorage > 0)  SlideJumpStorageFunction();

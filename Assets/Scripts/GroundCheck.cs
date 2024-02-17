@@ -45,7 +45,7 @@ public class GroundCheck : MonoBehaviour
         playerMovement.SetGrounded(true);
         GroundObject = other.gameObject;
 
-        timers.SlideJumpStorage = 0.2f;
+        timers.SlideJumpStorage = 0.4f;
 
         GroundState(true);
 

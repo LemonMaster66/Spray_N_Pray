@@ -59,7 +59,8 @@ public class Gun : MonoBehaviour
 
     [Header("Info")]
     public float finalDamage;
-    public float attackCooldowntime;
+    public float attackCooldownTime;
+    public float reloadTime;
     public float currentAmmo;
     public float currentMultiShot;
 
@@ -85,17 +86,18 @@ public class Gun : MonoBehaviour
 
     void FixedUpdate()
     {
-        if(AttackCooldown) attackCooldowntime -= Time.deltaTime;
-        if(attackCooldowntime < 0)
+        //Attack Speed Cooldown
+        if(AttackCooldown) attackCooldownTime -= Time.deltaTime;
+        if(attackCooldownTime < 0)
         {
             AttackCooldown = false;
-            attackCooldowntime = 0;
+            attackCooldownTime = 0;
 
             if(HoldingShoot && Automatic) ShootStart();
         }
 
         finalDamage        = (float)Math.Round(finalDamage, 2);
-        attackCooldowntime = (float)Math.Round(attackCooldowntime, 2);
+        attackCooldownTime = (float)Math.Round(attackCooldownTime, 2);
     }
 
 
@@ -108,7 +110,7 @@ public class Gun : MonoBehaviour
 
         // Values
         AttackCooldown = true;
-        attackCooldowntime += AttackSpeed;
+        attackCooldownTime += AttackSpeed;
 
         // MultiShot
         if(MultiShot == 0) StartCoroutine(Shoot(0));
@@ -141,6 +143,11 @@ public class Gun : MonoBehaviour
             if (Physics.Raycast(Camera.transform.position, shootVector, out RaycastHit hit, layerMask))
             {
                 finalDamage = Damage;
+
+                if(hit.collider != null && hit.collider.gameObject.layer == 3)
+                {
+                    Debug.Log("Stop Hitting Yourself");
+                }
 
                 GameObject bullet = Instantiate(BulletPrefab, GunTip.position, Quaternion.identity);
                 bullet.transform.parent = hit.transform;
@@ -209,9 +216,15 @@ public class Gun : MonoBehaviour
             
             if(ricoRemaining > 0)
             {
+                yield return new WaitForSeconds(0.05f);
+
                 Vector3 ricochetDirection = Vector3.Reflect(shootVector, hit.normal);
                 if(Physics.Raycast(HitPoint, ricochetDirection, out RaycastHit ricoHit, layerMask))
                 {
+                    if(ricoHit.collider != null && ricoHit.collider.gameObject.layer == 3 && SelfDamage)
+                    {
+                        Debug.Log("Stop Hitting Yourself");
+                    }
                     yield return StartCoroutine(SpawnBullet(bullet, ricoHit.point, ricochetDirection, ricoHit, true, ricoRemaining-1));
                 }
                 else

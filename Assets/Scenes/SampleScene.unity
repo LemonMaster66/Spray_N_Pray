@@ -1867,7 +1867,7 @@ MonoBehaviour:
   Knockback: 10
   FalloffDistance: 0
   FalloffTime: 0
-  RicocheteCount: 1
+  RicocheteCount: 2
   PenetrateCount: 0
   BulletTrailSpeed: 400
   ProjectileSpeed: 0
@@ -2061,7 +2061,7 @@ MonoBehaviour:
   Knockback: 0.5
   FalloffDistance: 0
   FalloffTime: 0
-  RicocheteCount: 1
+  RicocheteCount: 20
   PenetrateCount: 0
   BulletTrailSpeed: 300
   ProjectileSpeed: 0
@@ -2667,7 +2667,7 @@ MonoBehaviour:
   Knockback: 0
   FalloffDistance: 0
   FalloffTime: 0
-  RicocheteCount: 1
+  RicocheteCount: 172
   PenetrateCount: 0
   BulletTrailSpeed: 400
   ProjectileSpeed: 0

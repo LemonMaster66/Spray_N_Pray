@@ -134,7 +134,7 @@ public class PlayerMovement : MonoBehaviour
             //Sliding
             if(Sliding) rb.velocity += Movement *8;
             //Fast Falling
-            if(FastFalling) timers.SlamJumpStorageTime = 0.25f;
+            if(FastFalling) timers.SlamJumpStorageTime = 0.3f;
 
             //CanMove Check
             if(Sliding || FastFalling || Dashing) CanMove = false;
@@ -201,7 +201,7 @@ public class PlayerMovement : MonoBehaviour
             if(SlideJumpPower > 120) SlideJumpPower = 120;
             MaxSpeed = _maxSpeed + SlideJumpPower;
 
-            rb.AddForce(Movement * SlideJumpPower*1000);
+            rb.AddForce(Movement * SlideJumpPower*2000);
 
             SlideState(false);
         }
@@ -258,7 +258,7 @@ public class PlayerMovement : MonoBehaviour
 
             if(!Grounded)
             {
-                timers.SlideBuffer = 0.12f;
+                timers.SlideBuffer = 0.08f;
                 SlideJumpPower = VelocityMagnitudeXZ;
             }
 
