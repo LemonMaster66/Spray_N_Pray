@@ -589,9 +589,116 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 181080274}
   serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -400, y: -225.1944, z: 0}
+  m_LocalScale: {x: 1.2441679, y: 1.2441679, z: 1.2441679}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1059557072}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &266801293
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 266801297}
+  - component: {fileID: 266801296}
+  - component: {fileID: 266801295}
+  - component: {fileID: 266801294}
+  m_Layer: 0
+  m_Name: Cube_3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &266801294
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 266801293}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &266801295
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 266801293}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: dbaeee9b235a0a24bb6d06531b00bd77, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &266801296
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 266801293}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &266801297
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 266801293}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 9, y: 3, z: 12.13}
+  m_LocalScale: {x: 1, y: 8, z: 21.61}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -972,7 +1079,7 @@ MonoBehaviour:
     type: 3}
   layerMask:
     serializedVersion: 2
-    m_Bits: 51
+    m_Bits: 59
   Projectile: 0
   Automatic: 0
   DestroyOnImpact: 1
@@ -981,6 +1088,7 @@ MonoBehaviour:
   CanParryBullet: 0
   DamageFallOff: 0
   IgniteEnemies: 0
+  SelfDamage: 0
   Damage: 0
   MinDamage: 0
   Ammo: 0
@@ -992,8 +1100,9 @@ MonoBehaviour:
   Knockback: 8
   FalloffDistance: 0
   FalloffTime: 0
-  Ricochete: 0
-  Penetrate: 0
+  RicocheteCount: 1
+  PenetrateCount: 0
+  BulletTrailSpeed: 250
   ProjectileSpeed: 0
   ProjectileBounce: 0
   ProjectileGravity: 0
@@ -1737,7 +1846,7 @@ MonoBehaviour:
     type: 3}
   layerMask:
     serializedVersion: 2
-    m_Bits: 51
+    m_Bits: 59
   Projectile: 0
   Automatic: 0
   DestroyOnImpact: 1
@@ -1746,6 +1855,7 @@ MonoBehaviour:
   CanParryBullet: 0
   DamageFallOff: 0
   IgniteEnemies: 0
+  SelfDamage: 0
   Damage: 10
   MinDamage: 0
   Ammo: 0
@@ -1757,8 +1867,9 @@ MonoBehaviour:
   Knockback: 10
   FalloffDistance: 0
   FalloffTime: 0
-  Ricochete: 0
-  Penetrate: 0
+  RicocheteCount: 1
+  PenetrateCount: 0
+  BulletTrailSpeed: 400
   ProjectileSpeed: 0
   ProjectileBounce: 0
   ProjectileGravity: 0
@@ -1870,6 +1981,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1440627584}
+  - {fileID: 181080277}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1928,7 +2040,7 @@ MonoBehaviour:
     type: 3}
   layerMask:
     serializedVersion: 2
-    m_Bits: 51
+    m_Bits: 59
   Projectile: 0
   Automatic: 1
   DestroyOnImpact: 0
@@ -1937,6 +2049,7 @@ MonoBehaviour:
   CanParryBullet: 0
   DamageFallOff: 0
   IgniteEnemies: 0
+  SelfDamage: 0
   Damage: 0
   MinDamage: 0
   Ammo: 0
@@ -1948,8 +2061,9 @@ MonoBehaviour:
   Knockback: 0.5
   FalloffDistance: 0
   FalloffTime: 0
-  Ricochete: 0
-  Penetrate: 0
+  RicocheteCount: 1
+  PenetrateCount: 0
+  BulletTrailSpeed: 300
   ProjectileSpeed: 0
   ProjectileBounce: 0
   ProjectileGravity: 0
@@ -2351,8 +2465,8 @@ Transform:
   m_GameObject: {fileID: 1313066721}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4, y: 3, z: 10.96}
-  m_LocalScale: {x: 1, y: 8, z: 15}
+  m_LocalPosition: {x: 4, y: 3, z: 12.13}
+  m_LocalScale: {x: 1, y: 8, z: 21.61}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -2532,7 +2646,7 @@ MonoBehaviour:
     type: 3}
   layerMask:
     serializedVersion: 2
-    m_Bits: 51
+    m_Bits: 59
   Projectile: 0
   Automatic: 1
   DestroyOnImpact: 0
@@ -2541,19 +2655,21 @@ MonoBehaviour:
   CanParryBullet: 0
   DamageFallOff: 0
   IgniteEnemies: 0
+  SelfDamage: 0
   Damage: 0
   MinDamage: 0
   Ammo: 0
   AttackSpeed: 0
   ReloadSpeed: 0
-  MultiShot: 0
-  MultiShotInterval: 0
+  MultiShot: 4
+  MultiShotInterval: 0.01
   Spread: 0
   Knockback: 0
   FalloffDistance: 0
   FalloffTime: 0
-  Ricochete: 0
-  Penetrate: 0
+  RicocheteCount: 1
+  PenetrateCount: 0
+  BulletTrailSpeed: 400
   ProjectileSpeed: 0
   ProjectileBounce: 0
   ProjectileGravity: 0
@@ -3655,15 +3771,15 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1183043397}
-  - {fileID: 109773304}
   - {fileID: 410087041}
   - {fileID: 1485025985}
   - {fileID: 1059557072}
-  - {fileID: 181080277}
   - {fileID: 1854179761943498014}
   - {fileID: 1595419922}
   - {fileID: 945361808}
   - {fileID: 338522392}
   - {fileID: 164401772}
   - {fileID: 1313066725}
+  - {fileID: 266801297}
   - {fileID: 1518431973}
+  - {fileID: 109773304}

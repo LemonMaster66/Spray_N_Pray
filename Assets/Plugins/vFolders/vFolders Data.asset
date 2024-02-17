@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adb9c12a8c6c949f7af83a3d238359d0, type: 3}
+  m_Name: vFolders Data
+  m_EditorClassIdentifier: 
+  folderDatas_byGuid:
+    keys:
+    - ecee71bf3753fcc45ace5ff90dda3d47
+    - 9c53962885c2c4f449125a979d6ad240
+    - 3e1c67ea0c9bda04d97012e8a31f7463
+    - 77fd14e9f2c9e314bac79779b308f690
+    - 1c2fbd4af6d1fa44a90891ece2a1d38d
+    - 709f11a7f3c4041caa4ef136ea32d874
+    - 02f1d4bd18b36af4c915bc379298860a
+    - 3ee6d5ca7f043da42b6102fdfb127d17
+    values:
+    - colorIndex: 6
+      iconNameOrGuid: cs Script Icon
+    - colorIndex: 5
+      iconNameOrGuid: SceneAsset Icon
+    - colorIndex: 4
+      iconNameOrGuid: Prefab Icon
+    - colorIndex: 2
+      iconNameOrGuid: Mesh Icon
+    - colorIndex: 1
+      iconNameOrGuid: Material Icon
+    - colorIndex: 7
+      iconNameOrGuid: ScriptableObject Icon
+    - colorIndex: 8
+      iconNameOrGuid: Texture Icon
+    - colorIndex: 3
+      iconNameOrGuid: AnimatorController Icon

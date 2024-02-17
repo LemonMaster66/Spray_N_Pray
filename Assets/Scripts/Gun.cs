@@ -20,6 +20,7 @@ public class Gun : MonoBehaviour
     public bool CanParryBullet    = false;   // Punch after Shooting to Parry Your Own Bullets
     public bool DamageFallOff     = false;   // The Distance before the Bullets Lose All Damage
     public bool IgniteEnemies     = false;   // Sets Enemies on Fire
+    public bool SelfDamage        = false;   // Sets Enemies on Fire
 
     [Header("Properties")]
     public float Damage;                     // Damage on Hit                                             |  0 = None
@@ -33,8 +34,11 @@ public class Gun : MonoBehaviour
     public float Knockback;                  // The Force Applied to the Target from 1 Bullet             |  0 = None
     public float FalloffDistance;            // The Distance it takes to Lose All Damage                  |  0 = Disabled
     public float FalloffTime;                // The Time it takes to Lose All Damage                      |  0 = Disabled
-    public int   Ricochete;                  // The Number of Times it Bounces before Destroying          |  0 = None
-    public int   Penetrate;                  // The Amount of Targets it Pierces Through                  |  0 = None
+    public int   RicocheteCount;             // The Number of Times it Bounces before Destroying          |  0 = None
+    public int   PenetrateCount;             // The Amount of Targets it Pierces Through                  |  0 = None
+
+    [Header("Hitscan Properties")]
+    public float BulletTrailSpeed = 0.1f;    // The time it takes for the Bullet to Reach the Target      |  0 = Instant
 
     [Header("Projectile Properties")]
     public float ProjectileSpeed;            // The Speed of the Bullet                                   |  0 = Frozen
@@ -140,7 +144,7 @@ public class Gun : MonoBehaviour
 
                 GameObject bullet = Instantiate(BulletPrefab, GunTip.position, Quaternion.identity);
                 bullet.transform.parent = hit.transform;
-                StartCoroutine(SpawnBullet(bullet, hit.point, hit));
+                StartCoroutine(SpawnBullet(bullet, hit.point, shootVector, hit, true, RicocheteCount));
 
                 #region Extra Logic
                 // Damage Distance Falloff
@@ -161,7 +165,7 @@ public class Gun : MonoBehaviour
                 finalDamage = 0;
                 GameObject bullet = Instantiate(BulletPrefab, GunTip.position, Quaternion.identity);
                 bullet.transform.parent = hit.transform;
-                StartCoroutine(SpawnBullet(bullet, shootVector * 1000, hit));
+                StartCoroutine(SpawnBullet(bullet, shootVector*1000, shootVector, hit, false, 0));
             }
         }
     }
@@ -180,22 +184,44 @@ public class Gun : MonoBehaviour
         
     }
 
-    private IEnumerator SpawnBullet(GameObject bullet, Vector3 HitPoint, RaycastHit hit)
+    private IEnumerator SpawnBullet(GameObject bullet, Vector3 HitPoint, Vector3 shootVector, RaycastHit hit, bool Impacted, int ricoRemaining)
     {
-        float time = 0;
-        Vector3 startPos;
+        Vector3 startPosition = bullet.transform.position;
+
+        float distance = Vector3.Distance(bullet.transform.position, HitPoint);
+        float startingDistance = distance;
         
-        while(time < 1)
+        if(BulletTrailSpeed != 0)
         {
-            startPos = GunTip.position;
-            bullet.transform.position = Vector3.Lerp(startPos, HitPoint, time);
-            time += Time.deltaTime*3 / 0.1f;
-            
-            yield return null;
+            while(distance > 0)
+            {
+                bullet.transform.position = Vector3.Lerp(startPosition, HitPoint, 1 - (distance / startingDistance));
+                distance -= Time.deltaTime * BulletTrailSpeed;
+                
+                yield return null;
+            }
         }
         bullet.transform.position = HitPoint;
-        //Spawn Hit Particle
 
-        if(DestroyOnImpact || (hit.collider != null && hit.collider.gameObject.layer == 3)) Destroy(bullet.gameObject, 0.1f);
+        if(Impacted)
+        {
+            //Spawn Particle System
+            
+            if(ricoRemaining > 0)
+            {
+                Vector3 ricochetDirection = Vector3.Reflect(shootVector, hit.normal);
+                if(Physics.Raycast(HitPoint, ricochetDirection, out RaycastHit ricoHit, layerMask))
+                {
+                    yield return StartCoroutine(SpawnBullet(bullet, ricoHit.point, ricochetDirection, ricoHit, true, ricoRemaining-1));
+                }
+                else
+                {
+                    yield return StartCoroutine(SpawnBullet(bullet, ricochetDirection*100, ricochetDirection, ricoHit, false, 0));
+                }
+            }
+
+            if(DestroyOnImpact || (hit.collider != null && hit.collider.gameObject.layer == 3)) Destroy(bullet.gameObject, 0.1f);
+        }
+        else Destroy(bullet.gameObject, 0.1f);
     }
 }
