@@ -16,6 +16,7 @@ public class Gun : MonoBehaviour
     public bool Automatic         = false;   // Hold Down the Mouse to Continue Firing
     public bool DestroyOnImpact   = true;    // Bullets get Destroyed when Colliding
     public bool ExploadOnImpact   = false;   // Bullets Expload when Colliding
+    public bool RicoOnTargetHit   = false;   // Bullets can Ricochet off of enemies
     public bool ExplodeAfterTime  = false;   // Bullet will auto Explode after an amount of time
     public bool CanParryBullet    = false;   // Punch after Shooting to Parry Your Own Bullets
     public bool DamageFallOff     = false;   // The Distance before the Bullets Lose All Damage
@@ -34,7 +35,8 @@ public class Gun : MonoBehaviour
     public float Knockback;                  // The Force Applied to the Target from 1 Bullet             |  0 = None
     public float FalloffDistance;            // The Distance it takes to Lose All Damage                  |  0 = Disabled
     public float FalloffTime;                // The Time it takes to Lose All Damage                      |  0 = Disabled
-    public int   RicocheteCount;             // The Number of Times it Bounces before Destroying          |  0 = None
+    public int   RicochetCount;              // The Number of Times it Bounces before Destroying          |  0 = None
+    public int   RicochetMultiplier;         // The Damage Multiplier Per Ricochet                        |  0 = None
     public int   PenetrateCount;             // The Amount of Targets it Pierces Through                  |  0 = None
 
     [Header("Hitscan Properties")]
@@ -58,11 +60,12 @@ public class Gun : MonoBehaviour
     public bool HoldingShoot      = false;
 
     [Header("Info")]
-    public float finalDamage;
     public float attackCooldownTime;
     public float reloadTime;
     public float currentAmmo;
     public float currentMultiShot;
+    
+    private float FinalDamage;
 
     #region Debug Values
         private Transform       GunTip;
@@ -96,7 +99,7 @@ public class Gun : MonoBehaviour
             if(HoldingShoot && Automatic) ShootStart();
         }
 
-        finalDamage        = (float)Math.Round(finalDamage, 2);
+        FinalDamage        = (float)Math.Round(FinalDamage, 2);
         attackCooldownTime = (float)Math.Round(attackCooldownTime, 2);
     }
 
@@ -139,29 +142,18 @@ public class Gun : MonoBehaviour
         if (!Projectile)
         {
             //**********************************
-            // Hit
-            if (Physics.Raycast(Camera.transform.position, shootVector, out RaycastHit hit, layerMask))
+            // Epic Hit
+            if (Physics.Raycast(Camera.transform.position, shootVector, out RaycastHit hit, 100000 , layerMask))
             {
-                finalDamage = Damage;
-
-                if(hit.collider != null && hit.collider.gameObject.layer == 3)
-                {
-                    Debug.Log("Stop Hitting Yourself");
-                }
+                FinalDamage = Damage;
+                if(MultiShot != 0) FinalDamage /= MultiShot;
 
                 GameObject bullet = Instantiate(BulletPrefab, GunTip.position, Quaternion.identity);
-                bullet.transform.parent = hit.transform;
-                StartCoroutine(SpawnBullet(bullet, hit.point, shootVector, hit, true, RicocheteCount));
+                StartCoroutine(SpawnBullet(bullet, hit.point, shootVector, hit, true, RicochetCount, FinalDamage, 0));
 
                 #region Extra Logic
-                // Damage Distance Falloff
-                if (FalloffDistance != 0)
-                {
-                    float falloffFactor = Mathf.Clamp01(Mathf.SmoothStep(0, 1, 1 - (hit.distance / FalloffDistance)));
-                    finalDamage = Mathf.Lerp(MinDamage, Damage, falloffFactor);
-                }
-                // Knockback
-                if (hit.rigidbody != null) hit.rigidbody.AddForce(-hit.normal * Knockback * 10);
+                    // Knockback
+                    if (hit.rigidbody != null) hit.rigidbody.AddForce(-hit.normal * Knockback * 10);
                 #endregion
             }
 
@@ -169,10 +161,10 @@ public class Gun : MonoBehaviour
             // Epic Miss
             else
             {
-                finalDamage = 0;
+                FinalDamage = 0;
                 GameObject bullet = Instantiate(BulletPrefab, GunTip.position, Quaternion.identity);
                 bullet.transform.parent = hit.transform;
-                StartCoroutine(SpawnBullet(bullet, shootVector*1000, shootVector, hit, false, 0));
+                StartCoroutine(SpawnBullet(bullet, shootVector*1000, shootVector, hit, false, 0, FinalDamage, 0));
             }
         }
     }
@@ -191,11 +183,12 @@ public class Gun : MonoBehaviour
         
     }
 
-    private IEnumerator SpawnBullet(GameObject bullet, Vector3 HitPoint, Vector3 shootVector, RaycastHit hit, bool Impacted, int ricoRemaining)
+    private IEnumerator SpawnBullet(GameObject bullet, Vector3 HitPoint, Vector3 shootVector, RaycastHit hit, bool Impacted, int ricoRemaining, float finalDamage, float finalDistance)
     {
         Vector3 startPosition = bullet.transform.position;
 
         float distance = Vector3.Distance(bullet.transform.position, HitPoint);
+        finalDistance += distance;
         float startingDistance = distance;
         
         if(BulletTrailSpeed != 0)
@@ -213,24 +206,45 @@ public class Gun : MonoBehaviour
         if(Impacted)
         {
             //Spawn Particle System
+
+            // Damage Distance Falloff
+            if (FalloffDistance != 0)
+            {
+                float falloffFactor = Mathf.Clamp01(Mathf.SmoothStep(0, 1, 1 - (finalDistance / FalloffDistance)));
+                finalDamage = Mathf.Lerp(MinDamage, Damage, falloffFactor);
+            }
+
+            TargetPoint targetPoint = hit.transform.GetComponent<TargetPoint>();
+            if(targetPoint != null)
+            {
+                targetPoint.OnHit(finalDamage);
+                if(!RicoOnTargetHit) ricoRemaining = 0;
+            }
+
             
             if(ricoRemaining > 0)
             {
                 yield return new WaitForSeconds(0.05f);
 
+                finalDamage *= RicochetMultiplier;
+
                 Vector3 ricochetDirection = Vector3.Reflect(shootVector, hit.normal);
-                if(Physics.Raycast(HitPoint, ricochetDirection, out RaycastHit ricoHit, layerMask))
+                if(Physics.Raycast(HitPoint, ricochetDirection, out RaycastHit ricoHit, 100000, layerMask))
                 {
                     if(ricoHit.collider != null && ricoHit.collider.gameObject.layer == 3 && SelfDamage)
                     {
                         Debug.Log("Stop Hitting Yourself");
                     }
-                    yield return StartCoroutine(SpawnBullet(bullet, ricoHit.point, ricochetDirection, ricoHit, true, ricoRemaining-1));
+                    yield return StartCoroutine(SpawnBullet(bullet, ricoHit.point, ricochetDirection, ricoHit, true, ricoRemaining-1, finalDamage, finalDistance));
                 }
                 else
                 {
-                    yield return StartCoroutine(SpawnBullet(bullet, ricochetDirection*100, ricochetDirection, ricoHit, false, 0));
+                    yield return StartCoroutine(SpawnBullet(bullet, ricochetDirection*100, ricochetDirection, ricoHit, false, 0, 0, finalDistance));
                 }
+            }
+            else
+            {
+                bullet.transform.parent = hit.transform;
             }
 
             if(DestroyOnImpact || (hit.collider != null && hit.collider.gameObject.layer == 3)) Destroy(bullet.gameObject, 0.1f);
