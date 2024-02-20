@@ -19,9 +19,8 @@ public class Gun : MonoBehaviour
     public bool RicoOnTargetHit   = false;   // Bullets can Ricochet off of enemies
     public bool ExplodeAfterTime  = false;   // Bullet will auto Explode after an amount of time
     public bool CanParryBullet    = false;   // Punch after Shooting to Parry Your Own Bullets
-    public bool DamageFallOff     = false;   // The Distance before the Bullets Lose All Damage
     public bool IgniteEnemies     = false;   // Sets Enemies on Fire
-    public bool SelfDamage        = false;   // Sets Enemies on Fire
+    public bool SelfDamage        = false;   // Can Deal Damage to Yourself
 
     [Header("Properties")]
     public float Damage;                     // Damage on Hit                                             |  0 = None
@@ -40,7 +39,7 @@ public class Gun : MonoBehaviour
     public int   PenetrateCount;             // The Amount of Targets it Pierces Through                  |  0 = None
 
     [Header("Hitscan Properties")]
-    public float BulletTrailSpeed = 0.1f;    // The time it takes for the Bullet to Reach the Target      |  0 = Instant
+    public float BulletTrailSpeed = 400f;    // The time it takes for the Bullet to Reach the Target      |  0 = Instant
 
     [Header("Projectile Properties")]
     public float ProjectileSpeed;            // The Speed of the Bullet                                   |  0 = Frozen
@@ -64,7 +63,7 @@ public class Gun : MonoBehaviour
     public float reloadTime;
     public float currentAmmo;
     public float currentMultiShot;
-    
+
     private float FinalDamage;
 
     #region Debug Values

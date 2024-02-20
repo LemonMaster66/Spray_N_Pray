@@ -6,6 +6,7 @@ public class BillboardTarget : Target
 {
     private Animator animator;
     
+    [Header("Custom Properties")]
     public float DeadDuration = 5;
 
     private float deadDurationTime;
@@ -52,8 +53,8 @@ public class BillboardTarget : Target
         Dead = true;
         deadDurationTime = DeadDuration;
 
-        if     (Damage <  MaxHealth/100*10)                               animator.Play("KillSmall", 0, 0f);
-        else if(Damage >= MaxHealth/100*10  && Damage < MaxHealth/100*35) animator.Play("KillMedium", 0, 0f);
-        else if(Damage >= MaxHealth/100*35)                               animator.Play("KillBig", 0, 0f);
+        if     (Damage <  MaxHealth/100*15)                               animator.Play("KillSmall", 0, 0f);
+        else if(Damage >= MaxHealth/100*15  && Damage < MaxHealth/100*45) animator.Play("KillMedium", 0, 0f);
+        else if(Damage >= MaxHealth/100*45)                               animator.Play("KillBig", 0, 0f);
     }
 }

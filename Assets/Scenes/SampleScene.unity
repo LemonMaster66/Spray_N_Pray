@@ -662,7 +662,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.003
+  m_Radius: 0.005
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!33 &227402420
 MeshFilter:
@@ -1163,7 +1163,6 @@ MonoBehaviour:
   RicoOnTargetHit: 0
   ExplodeAfterTime: 0
   CanParryBullet: 0
-  DamageFallOff: 0
   IgniteEnemies: 0
   SelfDamage: 0
   Damage: 30
@@ -1171,9 +1170,9 @@ MonoBehaviour:
   Ammo: 0
   AttackSpeed: 0
   ReloadSpeed: 0
-  MultiShot: 10
-  MultiShotInterval: 0.05
-  Spread: 5
+  MultiShot: 0
+  MultiShotInterval: 0
+  Spread: 0
   Knockback: 0
   FalloffDistance: 0
   FalloffTime: 0
@@ -1412,7 +1411,7 @@ Transform:
   m_GameObject: {fileID: 410087039}
   serializedVersion: 2
   m_LocalRotation: {x: 0.9076734, y: -0.088521324, z: 0.24321032, w: 0.33036613}
-  m_LocalPosition: {x: 0, y: 3.83, z: 0}
+  m_LocalPosition: {x: 0, y: -24.32, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1932,10 +1931,9 @@ MonoBehaviour:
   RicoOnTargetHit: 0
   ExplodeAfterTime: 0
   CanParryBullet: 0
-  DamageFallOff: 0
   IgniteEnemies: 0
   SelfDamage: 0
-  Damage: 100
+  Damage: 10
   MinDamage: 0
   Ammo: 0
   AttackSpeed: 0
@@ -1944,9 +1942,9 @@ MonoBehaviour:
   MultiShotInterval: 0
   Spread: 0
   Knockback: 10
-  FalloffDistance: 100
+  FalloffDistance: 0
   FalloffTime: 0
-  RicochetCount: 1
+  RicochetCount: 0
   RicochetMultiplier: 0
   PenetrateCount: 0
   BulletTrailSpeed: 400
@@ -2140,7 +2138,7 @@ MonoBehaviour:
     type: 3}
   layerMask:
     serializedVersion: 2
-    m_Bits: 59
+    m_Bits: 51
   Projectile: 0
   Automatic: 0
   DestroyOnImpact: 1
@@ -2148,24 +2146,23 @@ MonoBehaviour:
   RicoOnTargetHit: 0
   ExplodeAfterTime: 0
   CanParryBullet: 0
-  DamageFallOff: 0
   IgniteEnemies: 0
   SelfDamage: 0
-  Damage: 75
+  Damage: 55
   MinDamage: 0
   Ammo: 0
   AttackSpeed: 0
   ReloadSpeed: 0
-  MultiShot: 8
+  MultiShot: 0
   MultiShotInterval: 0
-  Spread: 25
+  Spread: 0
   Knockback: 0
-  FalloffDistance: 0
+  FalloffDistance: 50
   FalloffTime: 0
   RicochetCount: 0
   RicochetMultiplier: 0
   PenetrateCount: 0
-  BulletTrailSpeed: 300
+  BulletTrailSpeed: 400
   ProjectileSpeed: 0
   ProjectileBounce: 0
   ProjectileGravity: 0
@@ -2449,7 +2446,7 @@ GameObject:
   - component: {fileID: 1190297333}
   - component: {fileID: 1190297334}
   m_Layer: 3
-  m_Name: GunPosition
+  m_Name: GunManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2872,7 +2869,7 @@ RectTransform:
   m_GameObject: {fileID: 1440627583}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: -0.05, y: -0.05, z: -0.05}
+  m_LocalScale: {x: -0.035, y: -0.035, z: -0.035}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1059557072}
@@ -3028,24 +3025,23 @@ MonoBehaviour:
   RicoOnTargetHit: 0
   ExplodeAfterTime: 0
   CanParryBullet: 0
-  DamageFallOff: 0
   IgniteEnemies: 0
   SelfDamage: 0
-  Damage: 75
+  Damage: 30
   MinDamage: 0
   Ammo: 0
   AttackSpeed: 0
   ReloadSpeed: 0
-  MultiShot: 0
+  MultiShot: 8
   MultiShotInterval: 0
-  Spread: 0
+  Spread: 25
   Knockback: 0
   FalloffDistance: 0
   FalloffTime: 0
   RicochetCount: 0
   RicochetMultiplier: 0
   PenetrateCount: 0
-  BulletTrailSpeed: 400
+  BulletTrailSpeed: 300
   ProjectileSpeed: 0
   ProjectileBounce: 0
   ProjectileGravity: 0
@@ -4409,9 +4405,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 614551a3d56621243b9991974502ac84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Dead: 0
   Health: 100
   TotalDamage: 0
+  Dead: 0
   MaxHealth: 0
   DamageStorageTime: 0
   DeadDuration: 3

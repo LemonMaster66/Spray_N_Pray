@@ -6,9 +6,12 @@ using UnityEngine;
 [Serializable]
 public class Target : MonoBehaviour
 {
-    public bool   Dead = false;
+    [Header("Properties")]
     public float  Health = 100;
     public float  TotalDamage;
+
+    [Header("States")]
+    public bool Dead = false;
 
     [HideInInspector] public float MaxHealth;
     [HideInInspector] public float DamageStorageTime;
