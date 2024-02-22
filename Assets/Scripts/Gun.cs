@@ -35,7 +35,7 @@ public class Gun : MonoBehaviour
     public float FalloffDistance;            // The Distance it takes to Lose All Damage                  |  0 = Disabled
     public float FalloffTime;                // The Time it takes to Lose All Damage                      |  0 = Disabled
     public int   RicochetCount;              // The Number of Times it Bounces before Destroying          |  0 = None
-    public int   RicochetMultiplier;         // The Damage Multiplier Per Ricochet                        |  0 = None
+    public int   RicochetMultiplier = 1;     // The Damage Multiplier Per Ricochet                        |  0 = None
     public int   PenetrateCount;             // The Amount of Targets it Pierces Through                  |  0 = None
 
     [Header("Hitscan Properties")]
@@ -68,7 +68,7 @@ public class Gun : MonoBehaviour
 
     #region Debug Values
         private Transform       GunTip;
-        private Transform       Camera;
+        private Transform       cam;
         private Rigidbody       rb;
         private PlayerMovement  playerMovement;
 
@@ -79,7 +79,7 @@ public class Gun : MonoBehaviour
     void Awake()
     {
         GunTip          = gameObject.transform.GetChild(0);
-        Camera          = GameObject.Find("Main Camera").transform;
+        cam             = Camera.main.transform;
         rb              = GetComponent<Rigidbody>();
         playerMovement  = FindFirstObjectByType<PlayerMovement>();
         
@@ -128,7 +128,7 @@ public class Gun : MonoBehaviour
     {
         yield return new WaitForSeconds(interval);
 
-        Vector3 shootVector = Camera.transform.forward;
+        Vector3 shootVector = cam.transform.forward;
         if (Spread != 0)
         {
             shootVector.x += UnityEngine.Random.Range(-Spread / 200, Spread / 200);
@@ -142,7 +142,7 @@ public class Gun : MonoBehaviour
         {
             //**********************************
             // Epic Hit
-            if (Physics.Raycast(Camera.transform.position, shootVector, out RaycastHit hit, 100000 , layerMask))
+            if (Physics.Raycast(cam.transform.position, shootVector, out RaycastHit hit, 100000 , layerMask))
             {
                 FinalDamage = Damage;
                 if(MultiShot != 0) FinalDamage /= MultiShot;
@@ -216,7 +216,7 @@ public class Gun : MonoBehaviour
             TargetPoint targetPoint = hit.transform.GetComponent<TargetPoint>();
             if(targetPoint != null)
             {
-                targetPoint.OnHit(finalDamage);
+                targetPoint.OnHit(finalDamage, HitPoint);
                 if(!RicoOnTargetHit) ricoRemaining = 0;
             }
 

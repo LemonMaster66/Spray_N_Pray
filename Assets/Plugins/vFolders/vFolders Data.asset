@@ -22,20 +22,26 @@ MonoBehaviour:
     - 709f11a7f3c4041caa4ef136ea32d874
     - 02f1d4bd18b36af4c915bc379298860a
     - 3ee6d5ca7f043da42b6102fdfb127d17
+    - ad7b7d793f8b6a24a8044ff9c75c2ba7
+    - 21cec37b914af0543830eb62bef15a5b
     values:
-    - colorIndex: 6
-      iconNameOrGuid: cs Script Icon
-    - colorIndex: 5
-      iconNameOrGuid: SceneAsset Icon
-    - colorIndex: 4
-      iconNameOrGuid: Prefab Icon
-    - colorIndex: 2
-      iconNameOrGuid: Mesh Icon
-    - colorIndex: 1
-      iconNameOrGuid: Material Icon
-    - colorIndex: 7
-      iconNameOrGuid: ScriptableObject Icon
     - colorIndex: 8
-      iconNameOrGuid: Texture Icon
+      iconNameOrGuid: cs Script Icon
+    - colorIndex: 7
+      iconNameOrGuid: SceneAsset Icon
+    - colorIndex: 6
+      iconNameOrGuid: Prefab Icon
+    - colorIndex: 4
+      iconNameOrGuid: Mesh Icon
     - colorIndex: 3
+      iconNameOrGuid: Material Icon
+    - colorIndex: 0
+      iconNameOrGuid: ScriptableObject Icon
+    - colorIndex: 10
+      iconNameOrGuid: Texture Icon
+    - colorIndex: 5
       iconNameOrGuid: AnimatorController Icon
+    - colorIndex: 2
+      iconNameOrGuid: AnimationClip Icon
+    - colorIndex: 1
+      iconNameOrGuid: ScriptableObject Icon

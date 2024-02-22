@@ -13,9 +13,9 @@ public class TargetPoint : MonoBehaviour
         target = GetComponentInParent<Target>();
     }
 
-    public virtual void OnHit(float Damage)
+    public virtual void OnHit(float Damage, Vector3 HitPoint)
     {
         float finalDamage = Damage * Multiplier;
-        target.TakeDamage(finalDamage);
+        target.TakeDamage(finalDamage, HitPoint);
     }
 }

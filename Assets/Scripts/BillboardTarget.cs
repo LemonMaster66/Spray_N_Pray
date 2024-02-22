@@ -36,15 +36,15 @@ public class BillboardTarget : Target
         }
     }
 
-    public override void TakeDamage(float Damage)
+    public override void TakeDamage(float Damage, Vector3 HitPoint)
     {
-        base.TakeDamage(Damage);
+        base.TakeDamage(Damage, HitPoint);
 
         if(Dead) return;
         
         if     (TotalDamage <  MaxHealth/100*10)                                    animator.Play("HitSmall", 0, 0f);
-        else if(TotalDamage >= MaxHealth/100*10  && TotalDamage < MaxHealth/100*25) animator.Play("HitMedium", 0, 0f);
-        else if(TotalDamage >  MaxHealth/100*25 && TotalDamage < MaxHealth/100*50)  animator.Play("HitBig", 0, 0f);
+        else if(TotalDamage >= MaxHealth/100*10 && TotalDamage < MaxHealth/100*25)  animator.Play("HitMedium", 0, 0f);
+        else if(TotalDamage >= MaxHealth/100*25 && TotalDamage < MaxHealth/100*50)  animator.Play("HitBig", 0, 0f);
         else if(TotalDamage >= MaxHealth/100*50)                                    animator.Play("HitOmega", 0, 0f);
     }
 
