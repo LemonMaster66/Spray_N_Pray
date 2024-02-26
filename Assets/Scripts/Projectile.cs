@@ -11,9 +11,8 @@ public class Projectile : MonoBehaviour
     [Header("Types")]
     private bool Sticky            = false;   // Bullets get Stuck to whatever they Collide with
     private bool DestroyOnImpact   = false;   // Bullets get Destroyed when Colliding
-    private bool ExploadOnImpact   = false;   // Bullets Expload when Colliding
-    private bool RicoOnTargetHit   = false;   // Bullets can Ricochet off of enemies
-    private bool ExplodeAfterTime  = false;   // Bullet will auto Explode after an amount of time
+    private bool ExploadOnDestroy  = false;   // Bullets Expload when Colliding
+    private bool RicoOnHit         = false;   // Bullets can Ricochet off of enemies
     private bool IgniteEnemies     = false;   // Sets Enemies on Fire
     private bool SelfDamage        = false;   // Can Deal Damage to Yourself
 
@@ -35,10 +34,13 @@ public class Projectile : MonoBehaviour
 
     [Header("States")]
     private bool Impacted = false;
+    private bool Attatched = false;
 
     [Header("Info")]
     public float _age;
     public float finalDamage;
+    public int   ricoRemaining;
+    public int   ricoCount;
 
 
     void Awake()
@@ -48,39 +50,75 @@ public class Projectile : MonoBehaviour
 
     void FixedUpdate()
     {
-        if(!Impacted) rb.velocity += Vector3.down * Gravity/150;
+        if(!Attatched) rb.velocity += Vector3.down * Gravity/150;
 
         if(FalloffTime > 0 && !Impacted)
         {
             _age += Time.deltaTime;  // Increment age each fixed frame
 
-            float falloffFactor = Mathf.Clamp01(Mathf.SmoothStep(0, 1, _age / FalloffTime));
-            finalDamage = Mathf.Lerp(Damage, MinDamage, falloffFactor);
+            float falloffFactor = Mathf.Clamp01(Mathf.SmoothStep(0, 1, _age/2 / FalloffTime));
+            finalDamage = Mathf.Lerp(finalDamage, MinDamage, falloffFactor);
         }
+        if(_age > LifeSpan && LifeSpan != 0) DestroyProjectile();
     }
 
-    void OnCollisionEnter(Collision collision)
+
+    public virtual void OnCollisionEnter(Collision collision)
     {
         // Knockback
         if (collision.rigidbody != null) collision.rigidbody.velocity += (collision.relativeVelocity.normalized*-1 * Knockback)/3;
 
+        //Hit Enemy
         TargetPoint targetPoint = collision.gameObject.GetComponent<TargetPoint>();
-        if(targetPoint != null) targetPoint.OnHit(finalDamage, transform.position);
-
-        if(RicochetCount < 1)
+        if(targetPoint != null)
         {
-            if(targetPoint != null || Sticky)
-            {
-                Impacted = true;
+            targetPoint.OnHit(finalDamage, transform.position);
 
-                rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
-                rb.isKinematic = true;
-                transform.parent = collision.transform;
-                GetComponent<Collider>().enabled = false;
-            }
+            if(ricoRemaining > 0 && RicoOnHit) Ricochet(collision);
+            else Impact(collision);
+        }
+        //Hit Environment
+        else
+        {
+            if(ricoRemaining > 0) Ricochet(collision);
+            else Impact(collision);
+        }
+    }
+
+    void Ricochet(Collision collision)
+    {
+        rb.velocity = Vector3.Reflect(collision.relativeVelocity*-1, collision.contacts[0].normal);
+        ricoRemaining--;
+        finalDamage *= RicochetMultiplier;
+    }
+
+    public void Impact(Collision collision)
+    {
+        Impacted = true;
+
+        if(Sticky)
+        {
+            Attatched = true;
+            rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
+            rb.isKinematic = true;
+            transform.parent = collision.transform;
+            GetComponent<Collider>().enabled = false;
         }
 
-        if(DestroyOnImpact) Destroy(gameObject, 0.4f);
+        if(DestroyOnImpact) DestroyProjectile();
+    }
+
+
+    public void DestroyProjectile()
+    {
+        if(!ExploadOnDestroy) Destroy(gameObject);
+        else Explode();
+    }
+
+    public void Explode()
+    {
+        Debug.Log("Boom");
+        Destroy(gameObject);
     }
 
 
@@ -91,29 +129,27 @@ public class Projectile : MonoBehaviour
         OriginGun = gun;
 
         //Spaghetti Ass Code Lmao
-        Sticky           = gun.ProjectileSticky;
-        DestroyOnImpact  = gun.DestroyOnImpact;
-        ExploadOnImpact  = gun.ExploadOnImpact;
-        RicoOnTargetHit  = gun.RicoOnTargetHit;
-        ExplodeAfterTime = gun.ExplodeAfterTime;
-        IgniteEnemies    = gun.IgniteEnemies;
-        SelfDamage       = gun.SelfDamage;
+        Sticky              = gun.ProjectileSticky;
+        DestroyOnImpact     = gun.DestroyOnImpact;
+        ExploadOnDestroy    = gun.ExploadOnDestroy;
+        RicoOnHit           = gun.RicoOnHit;
+        IgniteEnemies       = gun.IgniteEnemies;
+        SelfDamage          = gun.SelfDamage;
 
-        Damage             = gun.Damage;
-        MinDamage          = gun.MinDamage;
-        Knockback          = gun.Knockback;
-        FalloffTime        = gun.FalloffTime;
-        RicochetCount      = gun.RicochetCount;
-        RicochetMultiplier = gun.RicochetMultiplier;
-        PenetrateCount     = gun.PenetrateCount;
-        Gravity            = gun.ProjectileGravity;
-        LifeSpan           = gun.ProjectileLifeSpan;
+        Damage              = gun.Damage;
+        MinDamage           = gun.MinDamage;
+        Knockback           = gun.Knockback;
+        FalloffTime         = gun.FalloffTime;
+        ricoRemaining       = gun.RicochetCount;
+        RicochetMultiplier  = gun.RicochetMultiplier;
+        PenetrateCount      = gun.PenetrateCount;
+        Gravity             = gun.ProjectileGravity;
+        LifeSpan            = gun.ProjectileLifeSpan;
 
-        ExplosionSize      = gun.ExplosionSize;
-        SplashDamage       = gun.SplashDamage;
-        ExplosionKnockback = gun.ExplosionKnockback;
+        ExplosionSize       = gun.ExplosionSize;
+        SplashDamage        = gun.SplashDamage;
+        ExplosionKnockback  = gun.ExplosionKnockback;
 
         finalDamage = Damage;
-        if(LifeSpan > 0) Destroy(gameObject, LifeSpan);
     }
 }

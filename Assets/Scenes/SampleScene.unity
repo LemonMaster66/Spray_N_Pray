@@ -1326,32 +1326,32 @@ MonoBehaviour:
     m_Bits: 51
   Projectile: 1
   Automatic: 0
-  DestroyOnImpact: 1
-  ExploadOnImpact: 0
-  RicoOnTargetHit: 0
-  ExplodeAfterTime: 0
+  DestroyOnImpact: 0
+  ExploadOnDestroy: 0
+  RicoOnHit: 0
   CanParryBullet: 0
   IgniteEnemies: 0
   SelfDamage: 0
   InheritVelocity: 0
-  Damage: 0
-  MinDamage: 0
+  Damage: 100
+  MinDamage: 150
   Ammo: 0
   AttackSpeed: 0
   ReloadSpeed: 0
   MultiShot: 0
   MultiShotInterval: 0
   Spread: 0
-  Knockback: 10
+  Knockback: 0
   FalloffDistance: 0
-  FalloffTime: 0
-  RicochetCount: 0
+  FalloffTime: 1
+  RicochetCount: 1
   RicochetMultiplier: 0
   PenetrateCount: 0
   BulletTrailSpeed: 400
+  ProjectileSticky: 1
   ProjectileSpeed: 75
   ProjectileGravity: 100
-  ProjectileLifeSpan: 0
+  ProjectileLifeSpan: 5
   ExplosionSize: 0
   SplashDamage: 0
   ExplosionKnockback: 0
@@ -2095,9 +2095,8 @@ MonoBehaviour:
   Projectile: 0
   Automatic: 0
   DestroyOnImpact: 1
-  ExploadOnImpact: 0
-  RicoOnTargetHit: 0
-  ExplodeAfterTime: 0
+  ExploadOnDestroy: 0
+  RicoOnHit: 0
   CanParryBullet: 0
   IgniteEnemies: 0
   SelfDamage: 0
@@ -2110,13 +2109,14 @@ MonoBehaviour:
   MultiShot: 0
   MultiShotInterval: 0
   Spread: 0
-  Knockback: 0
+  Knockback: 10
   FalloffDistance: 0
   FalloffTime: 0
   RicochetCount: 0
   RicochetMultiplier: 0
   PenetrateCount: 0
   BulletTrailSpeed: 400
+  ProjectileSticky: 0
   ProjectileSpeed: 0
   ProjectileGravity: 0
   ProjectileLifeSpan: 0
@@ -2310,9 +2310,8 @@ MonoBehaviour:
   Projectile: 0
   Automatic: 1
   DestroyOnImpact: 0
-  ExploadOnImpact: 0
-  RicoOnTargetHit: 0
-  ExplodeAfterTime: 0
+  ExploadOnDestroy: 0
+  RicoOnHit: 0
   CanParryBullet: 0
   IgniteEnemies: 0
   SelfDamage: 0
@@ -2332,6 +2331,7 @@ MonoBehaviour:
   RicochetMultiplier: 0
   PenetrateCount: 0
   BulletTrailSpeed: 400
+  ProjectileSticky: 0
   ProjectileSpeed: 0
   ProjectileGravity: 0
   ProjectileLifeSpan: 0
@@ -3317,9 +3317,8 @@ MonoBehaviour:
   Projectile: 0
   Automatic: 0
   DestroyOnImpact: 1
-  ExploadOnImpact: 0
-  RicoOnTargetHit: 0
-  ExplodeAfterTime: 0
+  ExploadOnDestroy: 0
+  RicoOnHit: 0
   CanParryBullet: 0
   IgniteEnemies: 0
   SelfDamage: 0
@@ -3339,6 +3338,7 @@ MonoBehaviour:
   RicochetMultiplier: 0
   PenetrateCount: 0
   BulletTrailSpeed: 400
+  ProjectileSticky: 0
   ProjectileSpeed: 0
   ProjectileGravity: 0
   ProjectileLifeSpan: 0
@@ -3577,7 +3577,7 @@ CapsuleCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -3826,7 +3826,7 @@ Rigidbody:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1

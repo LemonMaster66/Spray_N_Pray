@@ -15,9 +15,8 @@ public class Gun : MonoBehaviour
     public bool Projectile        = false;   // If the fired Bullet is a Projectile
     public bool Automatic         = false;   // Hold Down the Mouse to Continue Firing
     public bool DestroyOnImpact   = true;    // Bullets get Destroyed when Colliding
-    public bool ExploadOnImpact   = false;   // Bullets Expload when Colliding
-    public bool RicoOnTargetHit   = false;   // Bullets can Ricochet off of enemies
-    public bool ExplodeAfterTime  = false;   // Bullet will auto Explode after an amount of time
+    public bool ExploadOnDestroy  = false;   // Bullets Expload when Colliding
+    public bool RicoOnHit         = false;   // Bullets can Ricochet off of enemies
     public bool CanParryBullet    = false;   // Punch after Shooting to Parry Your Own Bullets
     public bool IgniteEnemies     = false;   // Sets Enemies on Fire
     public bool SelfDamage        = false;   // Can Deal Damage to Yourself
@@ -224,7 +223,7 @@ public class Gun : MonoBehaviour
             if(targetPoint != null)
             {
                 targetPoint.OnHit(finalDamage, HitPoint);
-                if(!RicoOnTargetHit) ricoRemaining = 0;
+                if(!RicoOnHit) ricoRemaining = 0;
             }
 
             
@@ -262,7 +261,7 @@ public class Gun : MonoBehaviour
     {
         Rigidbody rb = bullet.GetComponent<Rigidbody>();
         rb.velocity = shootVector * ProjectileSpeed;
-        rb.velocity += playerMovement.rb.velocity/2;
+        if(InheritVelocity) rb.velocity += playerMovement.rb.velocity/2;
 
         bullet.GetComponent<Projectile>().AssignOrigin(this);
 
