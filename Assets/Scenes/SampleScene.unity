@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 99183666}
   - component: {fileID: 99183665}
   m_Layer: 0
-  m_Name: Glasses
+  m_Name: Cool Glasses
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -331,7 +331,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!65 &112037053
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1012,7 +1012,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 183
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1130,7 +1130,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 335979411}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GunTip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1232,7 +1232,7 @@ GameObject:
   - component: {fileID: 386553922}
   - component: {fileID: 386553921}
   - component: {fileID: 386553923}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Gun 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1319,38 +1319,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32d9bf9df97d4e245be4d3931007326d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BulletPrefab: {fileID: 1917465348466676881, guid: e0224ef4f3ebd914b8baf7aac618fdab,
+  BulletPrefab: {fileID: 529283415989745231, guid: 556d8b74a3531724188af8cc9447d667,
     type: 3}
   layerMask:
     serializedVersion: 2
     m_Bits: 51
-  Projectile: 0
+  Projectile: 1
   Automatic: 0
   DestroyOnImpact: 1
   ExploadOnImpact: 0
-  RicoOnTargetHit: 1
+  RicoOnTargetHit: 0
   ExplodeAfterTime: 0
   CanParryBullet: 0
   IgniteEnemies: 0
   SelfDamage: 0
-  Damage: 25
+  InheritVelocity: 0
+  Damage: 0
   MinDamage: 0
   Ammo: 0
-  AttackSpeed: 0.01
+  AttackSpeed: 0
   ReloadSpeed: 0
   MultiShot: 0
   MultiShotInterval: 0
   Spread: 0
-  Knockback: 0
+  Knockback: 10
   FalloffDistance: 0
   FalloffTime: 0
   RicochetCount: 0
   RicochetMultiplier: 0
   PenetrateCount: 0
   BulletTrailSpeed: 400
-  ProjectileSpeed: 0
-  ProjectileBounce: 0
-  ProjectileGravity: 0
+  ProjectileSpeed: 75
+  ProjectileGravity: 100
   ProjectileLifeSpan: 0
   ExplosionSize: 0
   SplashDamage: 0
@@ -2000,7 +2000,7 @@ GameObject:
   - component: {fileID: 962196530}
   - component: {fileID: 962196529}
   - component: {fileID: 962196531}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Gun 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2101,6 +2101,7 @@ MonoBehaviour:
   CanParryBullet: 0
   IgniteEnemies: 0
   SelfDamage: 0
+  InheritVelocity: 0
   Damage: 10
   MinDamage: 0
   Ammo: 0
@@ -2117,7 +2118,6 @@ MonoBehaviour:
   PenetrateCount: 0
   BulletTrailSpeed: 400
   ProjectileSpeed: 0
-  ProjectileBounce: 0
   ProjectileGravity: 0
   ProjectileLifeSpan: 0
   ExplosionSize: 0
@@ -2267,7 +2267,7 @@ GameObject:
   - component: {fileID: 1126089054}
   - component: {fileID: 1126089053}
   - component: {fileID: 1126089052}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Gun 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2308,31 +2308,31 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 51
   Projectile: 0
-  Automatic: 0
-  DestroyOnImpact: 1
+  Automatic: 1
+  DestroyOnImpact: 0
   ExploadOnImpact: 0
   RicoOnTargetHit: 0
   ExplodeAfterTime: 0
   CanParryBullet: 0
   IgniteEnemies: 0
   SelfDamage: 0
-  Damage: 100
+  InheritVelocity: 0
+  Damage: 2
   MinDamage: 0
   Ammo: 0
-  AttackSpeed: 0.01
+  AttackSpeed: 0.005
   ReloadSpeed: 0
   MultiShot: 100
-  MultiShotInterval: 0.005
+  MultiShotInterval: 0
   Spread: 13
   Knockback: 0
   FalloffDistance: 0
   FalloffTime: 0
-  RicochetCount: 5
-  RicochetMultiplier: 1
+  RicochetCount: 0
+  RicochetMultiplier: 0
   PenetrateCount: 0
   BulletTrailSpeed: 400
   ProjectileSpeed: 0
-  ProjectileBounce: 0
   ProjectileGravity: 0
   ProjectileLifeSpan: 0
   ExplosionSize: 0
@@ -2666,7 +2666,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1275889803}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GunTip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3274,7 +3274,7 @@ GameObject:
   - component: {fileID: 1510630092}
   - component: {fileID: 1510630091}
   - component: {fileID: 1510630090}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Gun 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3323,6 +3323,7 @@ MonoBehaviour:
   CanParryBullet: 0
   IgniteEnemies: 0
   SelfDamage: 0
+  InheritVelocity: 0
   Damage: 75
   MinDamage: 0
   Ammo: 0
@@ -3334,12 +3335,11 @@ MonoBehaviour:
   Knockback: 0
   FalloffDistance: 0
   FalloffTime: 0
-  RicochetCount: 5
-  RicochetMultiplier: 1
+  RicochetCount: 0
+  RicochetMultiplier: 0
   PenetrateCount: 0
   BulletTrailSpeed: 400
   ProjectileSpeed: 0
-  ProjectileBounce: 0
   ProjectileGravity: 0
   ProjectileLifeSpan: 0
   ExplosionSize: 0
@@ -3798,6 +3798,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 975e6c1e-b60f-491d-9b64-468b0addd6af
     m_ActionName: 'Player/Scroll[/Mouse/scroll/down,/Mouse/scroll/up]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 8d357432-9465-4dfd-88f0-f6079035bcce
+    m_ActionName: 'Player/New action[/Mouse/middleButton]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Player
@@ -3905,7 +3909,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1607209156}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GunTip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4094,7 +4098,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1977416617}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GunTip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4445,7 +4449,7 @@ PrefabInstance:
     - target: {fileID: 2154517689392446417, guid: 7a95aa4d35318ea418fa79c4032eba67,
         type: 3}
       propertyPath: Invincible
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2154517689392446417, guid: 7a95aa4d35318ea418fa79c4032eba67,
         type: 3}

@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 8320034555410247691}
   - component: {fileID: 5328054868958773874}
   - component: {fileID: 3972704547221376009}
-  m_Layer: 0
-  m_Name: Bullet
+  m_Layer: 7
+  m_Name: HitScan Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -109,7 +109,7 @@ TrailRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 88908c708dd02c34e9a5d480efa552b9, type: 2}
+  - {fileID: 2100000, guid: 9b7a130a9cfcba14cbb887262f0eb9ae, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -162,7 +162,7 @@ TrailRenderer:
     colorGradient:
       serializedVersion: 2
       key0: {r: 1, g: 1, b: 1, a: 1}
-      key1: {r: 1, g: 1, b: 1, a: 0}
+      key1: {r: 1, g: 1, b: 1, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
