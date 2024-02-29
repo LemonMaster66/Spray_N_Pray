@@ -33,7 +33,6 @@ public class Gun : MonoBehaviour
     public float Spread;                     // The Amount that Each Bullet Strays from the Target        |  0 = None
     public float Knockback;                  // The Force Applied to the Target from 1 Bullet             |  0 = None
     public float FalloffDistance;            // The Distance it takes to Lose All Damage                  |  0 = Disabled
-    public float FalloffTime;                // The Time it takes to Lose All Damage                      |  0 = Disabled
     public int   RicochetCount;              // The Number of Times it Bounces before Destroying          |  0 = None
     public float RicochetMultiplier = 1;     // The Damage Multiplier Per Ricochet                        |  0 = None
     public int   PenetrateCount;             // The Amount of Targets it Pierces Through                  |  0 = None
@@ -42,6 +41,7 @@ public class Gun : MonoBehaviour
     public float BulletTrailSpeed = 400f;    // The time it takes for the Bullet to Reach the Target      |  0 = Instant
 
     [Header("Projectile Properties")]
+    public float FalloffTime;                // The Time it takes to Lose All Damage                      |  0 = Disabled
     public bool  ProjectileSticky;           // Bullets get Stuck to whatever they Collide with           |  0 = Unlimited
     public float ProjectileSpeed;            // The Speed of the Bullet                                   |  0 = Frozen
     public float ProjectileGravity;          // The Gravity Force of the Bullet                           |  0 = None
@@ -59,10 +59,10 @@ public class Gun : MonoBehaviour
     public bool HoldingShoot      = false;
 
     [Header("Info")]
-    public float attackCooldownTime;
-    public float reloadTime;
-    public float currentAmmo;
-    public float currentMultiShot;
+    private float attackCooldownTime;
+    private float reloadTime;
+    private float currentAmmo;
+    private float currentMultiShot;
 
     private float FinalDamage;
 
@@ -266,5 +266,10 @@ public class Gun : MonoBehaviour
         bullet.GetComponent<Projectile>().AssignOrigin(this);
 
         yield return null;
+    }
+
+    public void Explode()
+    {
+        Debug.Log("Boom");
     }
 }
