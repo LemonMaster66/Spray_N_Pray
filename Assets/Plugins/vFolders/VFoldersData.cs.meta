@@ -14,5 +14,5 @@ AssetOrigin:
   productId: 263644
   packageName: vFolders 2
   packageVersion: 2.0.6
-  assetPath: Assets/vFolders/VFoldersData.cs
-  uploadId: 641416
+  assetPath: Assets/Plugins/vFolders/VFoldersData.cs
+  uploadId: 646186

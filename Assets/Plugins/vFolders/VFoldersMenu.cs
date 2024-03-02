@@ -100,14 +100,19 @@ namespace VFolders
         [MenuItem(dir + "Join our Discord", false, 1002)]
         static void dadasdsas() => Application.OpenURL("https://discord.gg/4dG9KsbspG");
 
-        [MenuItem(dir + "Get more Editor Enhancers/Get vHierarchy 2", false, 1003)]
-        static void dadadssadsas() => Application.OpenURL("https://assetstore.unity.com/packages/slug/251320?aid=1100lGLBn&pubref=menucheckout");
 
-        [MenuItem(dir + "Get more Editor Enhancers/Get vTabs 2", false, 1004)]
-        static void dadadssaasddsas() => Application.OpenURL("https://assetstore.unity.com/packages/slug/263645?aid=1100lGLBn&pubref=menucheckout");
 
-        [MenuItem(dir + "Get more Editor Enhancers/Get vFavorites 2", false, 1005)]
-        static void dadadsadssaasddsas() => Application.OpenURL("https://assetstore.unity.com/packages/slug/263643?aid=1100lGLBn&pubref=menucheckout");
+        [MenuItem(dir + "Check out vFavorites 2", false, 1003)]
+        static void dadadssadsas() => Application.OpenURL("https://assetstore.unity.com/packages/slug/263643?aid=1100lGLBn&pubref=checkoutvfav");
+
+        // [MenuItem(dir + "Get more Editor Enhancers/Get vHierarchy 2", false, 1003)]
+        // static void dadadssadsas() => Application.OpenURL("https://assetstore.unity.com/packages/slug/251320?aid=1100lGLBn&pubref=menucheckout");
+
+        // [MenuItem(dir + "Get more Editor Enhancers/Get vTabs 2", false, 1004)]
+        // static void dadadssaasddsas() => Application.OpenURL("https://assetstore.unity.com/packages/slug/263645?aid=1100lGLBn&pubref=menucheckout");
+
+        // [MenuItem(dir + "Get more Editor Enhancers/Get vFavorites 2", false, 1005)]
+        // static void dadadsadssaasddsas() => Application.OpenURL("https://assetstore.unity.com/packages/slug/263643?aid=1100lGLBn&pubref=menucheckout");
 
 
 
