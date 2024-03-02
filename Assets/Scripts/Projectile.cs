@@ -20,7 +20,7 @@ public class Projectile : MonoBehaviour
     private float Damage;                     // Damage on Hit
     private float MinDamage;                  // The Damage Applied at Max Falloff Distance
     private float Knockback;                  // The Force Applied to the Target from 1 Bullet
-    private float FalloffTime;                // The Time it takes to go from Damage to MinDamage
+    private float DamageFalloff;              // The Time it takes to go from Damage to MinDamage
     private int   RicochetCount;              // The Number of Times it Bounces before Destroying
     private float RicochetMultiplier;         // The Damage Multiplier Per Ricochet
     private int   PenetrateCount;             // The Amount of Targets it Pierces Through
@@ -52,11 +52,11 @@ public class Projectile : MonoBehaviour
     {
         if(!Attatched) rb.velocity += Vector3.down * Gravity/150;
 
-        if(FalloffTime > 0 && !Impacted)
+        if(DamageFalloff > 0 && !Impacted)
         {
             _age += Time.deltaTime;  // Increment age each fixed frame
 
-            float falloffFactor = Mathf.Clamp01(Mathf.SmoothStep(0, 1, _age/2 / FalloffTime));
+            float falloffFactor = Mathf.Clamp01(Mathf.SmoothStep(0, 1, _age/2 / DamageFalloff));
             finalDamage = Mathf.Lerp(finalDamage, MinDamage, falloffFactor);
         }
         if(_age > LifeSpan && LifeSpan != 0) DestroyProjectile();
@@ -139,7 +139,7 @@ public class Projectile : MonoBehaviour
         Damage              = gun.Damage;
         MinDamage           = gun.MinDamage;
         Knockback           = gun.Knockback;
-        FalloffTime         = gun.FalloffTime;
+        DamageFalloff       = gun.DamageFalloff;
         ricoRemaining       = gun.RicochetCount;
         RicochetMultiplier  = gun.RicochetMultiplier;
         PenetrateCount      = gun.PenetrateCount;
@@ -150,6 +150,7 @@ public class Projectile : MonoBehaviour
         SplashDamage        = gun.SplashDamage;
         ExplosionKnockback  = gun.ExplosionKnockback;
 
+        if(gun.MultiShot > 1) Damage /= gun.MultiShot;
         finalDamage = Damage;
     }
 }

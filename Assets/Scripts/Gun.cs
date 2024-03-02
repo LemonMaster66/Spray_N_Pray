@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System;
+using Unity.Mathematics;
 
 [Serializable]
 public class Gun : MonoBehaviour
@@ -32,7 +33,7 @@ public class Gun : MonoBehaviour
     public float MultiShotInterval;          // Time Between Each MultiShot Bullet                        |  0 = Instant
     public float Spread;                     // The Amount that Each Bullet Strays from the Target        |  0 = None
     public float Knockback;                  // The Force Applied to the Target from 1 Bullet             |  0 = None
-    public float FalloffDistance;            // The Distance it takes to Lose All Damage                  |  0 = Disabled
+    public float DamageFalloff;              // The Distance / Time it takes to Lose All Damage           |  0 = Disabled
     public int   RicochetCount;              // The Number of Times it Bounces before Destroying          |  0 = None
     public float RicochetMultiplier = 1;     // The Damage Multiplier Per Ricochet                        |  0 = None
     public int   PenetrateCount;             // The Amount of Targets it Pierces Through                  |  0 = None
@@ -41,7 +42,6 @@ public class Gun : MonoBehaviour
     public float BulletTrailSpeed = 400f;    // The time it takes for the Bullet to Reach the Target      |  0 = Instant
 
     [Header("Projectile Properties")]
-    public float FalloffTime;                // The Time it takes to Lose All Damage                      |  0 = Disabled
     public bool  ProjectileSticky;           // Bullets get Stuck to whatever they Collide with           |  0 = Unlimited
     public float ProjectileSpeed;            // The Speed of the Bullet                                   |  0 = Frozen
     public float ProjectileGravity;          // The Gravity Force of the Bullet                           |  0 = None
@@ -137,6 +137,7 @@ public class Gun : MonoBehaviour
             shootVector.y += UnityEngine.Random.Range(-Spread / 200, Spread / 200);
             shootVector.z += UnityEngine.Random.Range(-Spread / 200, Spread / 200);
         }
+        shootVector = shootVector.normalized;
 
         FinalDamage = Damage;
         if(MultiShot != 0) FinalDamage /= MultiShot;
@@ -147,7 +148,7 @@ public class Gun : MonoBehaviour
         {
             //**********************************
             // Epic Hit
-            if (Physics.Raycast(cam.transform.position, shootVector, out RaycastHit hit, 100000 , layerMask))
+            if (Physics.Raycast(cam.transform.position, shootVector, out RaycastHit hit, 100000, layerMask))
             {
                 GameObject bullet = Instantiate(BulletPrefab, GunTip.position, Quaternion.identity);
                 StartCoroutine(SpawnHitscanBullet(bullet, hit.point, shootVector, hit, true, RicochetCount, FinalDamage, 0));
@@ -213,9 +214,9 @@ public class Gun : MonoBehaviour
             //Spawn Particle System
 
             // Damage Distance Falloff
-            if (FalloffDistance != 0)
+            if (DamageFalloff != 0)
             {
-                float falloffFactor = Mathf.Clamp01(Mathf.SmoothStep(0, 1, 1 - (finalDistance / FalloffDistance)));
+                float falloffFactor = Mathf.Clamp01(Mathf.SmoothStep(0, 1, 1 - (finalDistance / DamageFalloff/100)));
                 finalDamage = Mathf.Lerp(MinDamage, Damage, falloffFactor);
             }
 
@@ -260,7 +261,17 @@ public class Gun : MonoBehaviour
     private IEnumerator SpawnProjectileBullet(GameObject bullet, Vector3 shootVector, int ricoRemaining, float finalDamage, float finalDistance)
     {
         Rigidbody rb = bullet.GetComponent<Rigidbody>();
-        rb.velocity = shootVector * ProjectileSpeed;
+
+        if(Physics.Raycast(cam.position, shootVector, out RaycastHit hit, 100000, layerMask))
+        {
+            // // Debug Lines
+            // Debug.DrawRay(GunTip.position, shootVector.normalized * 15, Color.red, 2);
+            // Debug.DrawRay(GunTip.position, (GunTip.position - hit.point).normalized*-15, Color.green, 2);
+            // Debug.DrawRay(cam.position, shootVector.normalized*15, Color.white, 2);
+            rb.velocity = (GunTip.position - hit.point).normalized * ProjectileSpeed *-1;
+        }
+        else rb.velocity =  shootVector * ProjectileSpeed;
+
         if(InheritVelocity) rb.velocity += playerMovement.rb.velocity/2;
 
         bullet.GetComponent<Projectile>().AssignOrigin(this);
