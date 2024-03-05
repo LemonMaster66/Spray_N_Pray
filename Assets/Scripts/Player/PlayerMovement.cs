@@ -122,6 +122,8 @@ public class PlayerMovement : MonoBehaviour
             if(DashCount < 0) DashCount = 0;
 
             if(Grounded && SlideJumpPower > 5 && timers.SlideJumpStorage == 0) SlideJumpPower = 5;
+
+            LockToMaxSpeed();
         #endregion
         //**********************************
         #region Conditions
@@ -222,13 +224,11 @@ public class PlayerMovement : MonoBehaviour
         if(SlideJumpPower > 120) SlideJumpPower = 120;
         MaxSpeed = _maxSpeed + SlideJumpPower;
 
-        rb.AddForce(Movement * SlideJumpPower*2000);
+        rb.AddForce(Movement * SlideJumpPower*20);
 
         SlideState(false);
 
         rb.AddForce(Vector3.up * JumpHeight, ForceMode.VelocityChange);
-
-        LockToMaxSpeed();
     }
     private void WallJump()
     {
@@ -239,20 +239,17 @@ public class PlayerMovement : MonoBehaviour
 
         rb.velocity = new Vector3(0, 0, 0);
         rb.AddForce(Vector3.up * (JumpForce-3), ForceMode.VelocityChange);
-        rb.AddForce(wallCheck.WallCollision.contacts[0].normal.normalized*150, ForceMode.VelocityChange);
+        rb.AddForce(wallCheck.WallCollision.contacts[0].normal.normalized*40, ForceMode.VelocityChange);
     }
 
     public void LockToMaxSpeed()
     {
-        if (rb.velocity.magnitude > MaxSpeed)
-        {
-            // Get the velocity direction
-            Vector3 newVelocity = rb.velocity;
-            newVelocity.y = 0f;
-            newVelocity = Vector3.ClampMagnitude(newVelocity, MaxSpeed);
-            newVelocity.y = rb.velocity.y;
-            rb.velocity = newVelocity;
-        }
+        // Get the velocity direction
+        Vector3 newVelocity = rb.velocity;
+        newVelocity.y = 0f;
+        newVelocity = Vector3.ClampMagnitude(newVelocity, MaxSpeed);
+        newVelocity.y = rb.velocity.y;
+        rb.velocity = newVelocity;
     }
 
     public void SetGrounded(bool state) 
