@@ -78,7 +78,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "New action",
+                    "name": "PauseInputs",
                     "type": "Button",
                     "id": "8d357432-9465-4dfd-88f0-f6079035bcce",
                     "expectedControlType": "Button",
@@ -223,11 +223,11 @@
                 {
                     "name": "",
                     "id": "6f49e832-813e-4768-afb0-4874f1ec2ad6",
-                    "path": "<Mouse>/middleButton",
+                    "path": "<Keyboard>/backquote",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "New action",
+                    "groups": "Keyboard&Mouse",
+                    "action": "PauseInputs",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

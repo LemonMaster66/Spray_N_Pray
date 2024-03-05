@@ -5,7 +5,6 @@ using UnityEditor;
 using System;
 using Unity.Mathematics;
 
-[Serializable]
 public class Gun : MonoBehaviour
 {
     [Header("References")]
@@ -33,7 +32,7 @@ public class Gun : MonoBehaviour
     public float MultiShotInterval;          // Time Between Each MultiShot Bullet                        |  0 = Instant
     public float Spread;                     // The Amount that Each Bullet Strays from the Target        |  0 = None
     public float Knockback;                  // The Force Applied to the Target from 1 Bullet             |  0 = None
-    public float DamageFalloff;              // The Distance / Time it takes to Lose All Damage           |  0 = Disabled
+    public float DamageFalloff;              // The Time it takes to go from Damage to MinDamage           |  0 = Disabled
     public int   RicochetCount;              // The Number of Times it Bounces before Destroying          |  0 = None
     public float RicochetMultiplier = 1;     // The Damage Multiplier Per Ricochet                        |  0 = None
     public int   PenetrateCount;             // The Amount of Targets it Pierces Through                  |  0 = None
@@ -53,13 +52,15 @@ public class Gun : MonoBehaviour
     public float ExplosionKnockback;         // The Force Applied to the Target away from the Explosion
 
     [Header("States")]
-    public bool CanShoot          = true;
-    public bool AttackCooldown    = false;
-    public bool Reloading         = false;
-    public bool HoldingShoot      = false;
+    public bool CanShoot           = true;
+    public bool AttackCooldown     = false;
+    public bool MultiShotCooldown  = false;
+    public bool Reloading          = false;
+    public bool HoldingShoot       = false;
 
     [Header("Info")]
-    private float attackCooldownTime;
+    public float attackCooldownTime;
+    public float multiShotCooldownTime;
     private float reloadTime;
     private float currentAmmo;
     private float currentMultiShot;
@@ -98,8 +99,21 @@ public class Gun : MonoBehaviour
             if(HoldingShoot && Automatic) ShootStart();
         }
 
-        FinalDamage        = (float)Math.Round(FinalDamage, 2);
-        attackCooldownTime = (float)Math.Round(attackCooldownTime, 2);
+        //MultiShot Cooldown
+        if(MultiShotCooldown) multiShotCooldownTime -= Time.deltaTime;
+        if(multiShotCooldownTime < 0)
+        {
+            AttackCooldown = true;
+            attackCooldownTime += AttackSpeed;
+
+            MultiShotCooldown = false;
+            multiShotCooldownTime = 0;
+
+        }
+
+        FinalDamage           = (float)Math.Round(FinalDamage, 2);
+        attackCooldownTime    = (float)Math.Round(attackCooldownTime, 2);
+        multiShotCooldownTime = (float)Math.Round(multiShotCooldownTime, 2);
     }
 
 
@@ -108,27 +122,26 @@ public class Gun : MonoBehaviour
         HoldingShoot = true;
 
         // Checks
-        if (!CanShoot || AttackCooldown) return;
+        if (!CanShoot || AttackCooldown || MultiShotCooldown) return;
 
-        // Values
-        AttackCooldown = true;
-        attackCooldownTime += AttackSpeed;
-        attackCooldownTime += MultiShotInterval * MultiShot;
 
         // MultiShot
-        if(MultiShot == 0) StartCoroutine(Shoot(0));
-        if(MultiShot != 0)
+        if(MultiShot < 2) StartCoroutine(Shoot(0));
+        else if(MultiShot > 1)
         {
             for (int i = 0; i < MultiShot; i++)
             {
-                StartCoroutine(Shoot(i+1));
+                multiShotCooldownTime += MultiShotInterval;
+                StartCoroutine(Shoot(i));
             }
         }
+        MultiShotCooldown = true;
+        multiShotCooldownTime -= MultiShotInterval;
+        
     }
     private IEnumerator Shoot(int BulletNumber)
     {
         yield return new WaitForSeconds(BulletNumber * MultiShotInterval);
-
 
         Vector3 shootVector = cam.transform.forward;
         if (Spread != 0)
@@ -152,9 +165,6 @@ public class Gun : MonoBehaviour
             {
                 GameObject bullet = Instantiate(BulletPrefab, GunTip.position, Quaternion.identity);
                 StartCoroutine(SpawnHitscanBullet(bullet, hit.point, shootVector, hit, true, RicochetCount, FinalDamage, 0));
-
-                // Knockback
-                if (hit.rigidbody != null) hit.rigidbody.AddForce(-hit.normal * Knockback * 10);
             }
 
             //**********************************
@@ -167,6 +177,7 @@ public class Gun : MonoBehaviour
                 StartCoroutine(SpawnHitscanBullet(bullet, shootVector*1000, shootVector, hit, false, 0, FinalDamage, 0));
             }
         }
+
         //Projectile
         else
         {
@@ -182,7 +193,8 @@ public class Gun : MonoBehaviour
 
     public virtual void AltShootStart()
     {
-        //Debug.Log("Shoot Gun");
+        GameObject[] Bullets = GameObject.FindGameObjectsWithTag("Bullet");
+        foreach(GameObject bullet in Bullets) Destroy(bullet);
     }
     public virtual void AltShootEnd()
     {
@@ -213,21 +225,23 @@ public class Gun : MonoBehaviour
         {
             //Spawn Particle System
 
-            // Damage Distance Falloff
+            // Hitscan Damage Distance Falloff
             if (DamageFalloff != 0)
             {
                 float falloffFactor = Mathf.Clamp01(Mathf.SmoothStep(0, 1, 1 - (finalDistance / DamageFalloff/100)));
                 finalDamage = Mathf.Lerp(MinDamage, Damage, falloffFactor);
             }
 
+            // Knockback
+            if (hit.rigidbody != null) hit.rigidbody.AddForce(-hit.normal * Knockback * 10);
+
             TargetPoint targetPoint = hit.transform.GetComponent<TargetPoint>();
             if(targetPoint != null)
             {
                 targetPoint.OnHit(finalDamage, HitPoint);
-                if(!RicoOnHit) ricoRemaining = 0;
             }
 
-            
+          
             if(ricoRemaining > 0)
             {
                 yield return new WaitForSeconds(0.05f);
@@ -237,10 +251,6 @@ public class Gun : MonoBehaviour
                 Vector3 ricochetDirection = Vector3.Reflect(shootVector, hit.normal);
                 if(Physics.Raycast(HitPoint, ricochetDirection, out RaycastHit ricoHit, 100000, layerMask))
                 {
-                    if(ricoHit.collider != null && ricoHit.collider.gameObject.layer == 3 && SelfDamage)
-                    {
-                        Debug.Log("Stop Hitting Yourself");
-                    }
                     yield return StartCoroutine(SpawnHitscanBullet(bullet, ricoHit.point, ricochetDirection, ricoHit, true, ricoRemaining-1, finalDamage, finalDistance));
                 }
                 else
@@ -248,10 +258,7 @@ public class Gun : MonoBehaviour
                     yield return StartCoroutine(SpawnHitscanBullet(bullet, ricochetDirection*100, ricochetDirection, ricoHit, false, 0, 0, finalDistance));
                 }
             }
-            else
-            {
-                bullet.transform.parent = hit.transform;
-            }
+            else bullet.transform.parent = hit.transform;
 
             if(DestroyOnImpact || (hit.collider != null && hit.collider.gameObject.layer == 3)) Destroy(bullet.gameObject, 0.1f);
         }
@@ -262,17 +269,8 @@ public class Gun : MonoBehaviour
     {
         Rigidbody rb = bullet.GetComponent<Rigidbody>();
 
-        if(Physics.Raycast(cam.position, shootVector, out RaycastHit hit, 100000, layerMask))
-        {
-            // // Debug Lines
-            // Debug.DrawRay(GunTip.position, shootVector.normalized * 15, Color.red, 2);
-            // Debug.DrawRay(GunTip.position, (GunTip.position - hit.point).normalized*-15, Color.green, 2);
-            // Debug.DrawRay(cam.position, shootVector.normalized*15, Color.white, 2);
-            rb.velocity = (GunTip.position - hit.point).normalized * ProjectileSpeed *-1;
-        }
-        else rb.velocity =  shootVector * ProjectileSpeed;
-
-        if(InheritVelocity) rb.velocity += playerMovement.rb.velocity/2;
+        rb.velocity =  shootVector * ProjectileSpeed;
+        if(InheritVelocity) rb.velocity += playerMovement.rb.velocity;
 
         bullet.GetComponent<Projectile>().AssignOrigin(this);
 

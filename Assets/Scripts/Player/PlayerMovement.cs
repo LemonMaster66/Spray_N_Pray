@@ -1,4 +1,5 @@
 using System;
+using Unity.Burst.Intrinsics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -28,6 +29,7 @@ public class PlayerMovement : MonoBehaviour
 
     public bool CanMove        = true;
     public bool Dead           = false;
+    public bool Paused         = false;
 
     public bool Dashing        = false;
     public bool LongJumping    = false;
@@ -60,7 +62,8 @@ public class PlayerMovement : MonoBehaviour
         [HideInInspector] public Transform    Camera;
 
         private Timers       timers;
-        private GroundCheck  groundCheck;
+        public GroundCheck  groundCheck;
+        public WallCheck    wallCheck;
     #endregion
 
 
@@ -72,7 +75,8 @@ public class PlayerMovement : MonoBehaviour
 
         //Assign Scripts
         groundCheck  = GetComponentInChildren<GroundCheck>();
-        timers  = GetComponent<Timers>();
+        wallCheck    = GetComponentInChildren<WallCheck>();
+        timers       = GetComponent<Timers>();
 
         //Component Values
         rb.useGravity = false;
@@ -137,7 +141,7 @@ public class PlayerMovement : MonoBehaviour
             if(FastFalling) timers.SlamJumpStorageTime = 0.3f;
 
             //CanMove Check
-            if(Sliding || FastFalling || Dashing) CanMove = false;
+            if(Sliding || FastFalling || Dashing || Paused) CanMove = false;
             else CanMove = true;
         #endregion
         //**********************************
@@ -163,7 +167,8 @@ public class PlayerMovement : MonoBehaviour
     //***********************************************************************
     //Movement Functions
     public void OnMove(InputAction.CallbackContext MovementValue)
-    {  
+    {
+        if(Paused) return;
         Vector2 inputVector = MovementValue.ReadValue<Vector2>();
         MovementX = inputVector.x;
         MovementY = inputVector.y;
@@ -171,9 +176,11 @@ public class PlayerMovement : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
+        if(Paused) return;
         if(context.started && !Dead)
         {
-            if((Grounded || timers.CoyoteTime > 0) && !HasJumped) Jump();
+            if(AgainstWall && wallCheck.WallJumpsLeft > 0 && !Grounded) WallJump();
+            else if((Grounded || timers.CoyoteTime > 0) && !HasJumped) Jump();
             else if(!Grounded || timers.CoyoteTime == 0) timers.JumpBuffer = 0.15f;
         }
     }
@@ -183,36 +190,65 @@ public class PlayerMovement : MonoBehaviour
         float JumpHeight = JumpForce;
         timers.SlamJump += 3;
 
-        //Long Jump
-        if(Dashing && DashCount > 1)
+        if(AgainstWall && wallCheck.WallJumpsLeft > 0 && !Grounded)
         {
-            LongJumping = true;
-            JumpHeight -= 8;
-            MaxSpeed = 70;
-            DashCount -= 1;
-            EndDash();
+            WallJump();
+            return;
         }
-        //Slide Jump
-        if(Sliding)
+        if(Dashing && DashCount > 1) //Long Jump
         {
-            SlideJumping = true;
-
-            SlideJumpPower += (VelocityMagnitudeXZ/5) + timers.SlamJump;
-            if(SlideJumpPower > 120) SlideJumpPower = 120;
-            MaxSpeed = _maxSpeed + SlideJumpPower;
-
-            rb.AddForce(Movement * SlideJumpPower*2000);
-
-            SlideState(false);
+            LongJump();
+            return;
         }
+        if(Sliding) //Slide Jump
+        {
+            SlideJump();
+            return;
+        }
+        
 
         if(!SlideJumping) JumpHeight += timers.SlamJump;
         rb.AddForce(Vector3.up * JumpHeight, ForceMode.VelocityChange);
+    }
+    private void LongJump()
+    {
+        float JumpHeight = JumpForce -8;
+        LongJumping = true;
+        MaxSpeed = 70;
+        DashCount -= 1;
+        EndDash();
+
+        rb.AddForce(Vector3.up * JumpHeight, ForceMode.VelocityChange);
+    }
+    private void SlideJump()
+    {
+        SlideJumping = true;
+        float JumpHeight = JumpForce;
+
+        SlideJumpPower += (VelocityMagnitudeXZ/5) + timers.SlamJump*3;
+        if(SlideJumpPower > 120) SlideJumpPower = 120;
+        MaxSpeed = _maxSpeed + SlideJumpPower;
+
+        rb.AddForce(Movement * SlideJumpPower*2000);
+
+        SlideState(false);
+
+        rb.AddForce(Vector3.up * JumpHeight, ForceMode.VelocityChange);
+    }
+    private void WallJump()
+    {
+        rb.velocity = new Vector3(0, 0, 0);
+        rb.AddForce(Vector3.up * (JumpForce-3), ForceMode.VelocityChange);
+        rb.AddForce(wallCheck.WallCollision.contacts[0].normal.normalized*150, ForceMode.VelocityChange);
     }
 
     public void SetGrounded(bool state) 
     {
         Grounded = state;
+    }
+    public void SetAgainstWall(bool state) 
+    {
+        AgainstWall = state;
     }
 
     //***********************************************************************
@@ -221,6 +257,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void OnDash(InputAction.CallbackContext context)
     {
+        if(Paused) return;
         if(context.started && !Dead && !Dashing && DashCount > 1)
         {
             Dashing = true;
@@ -251,6 +288,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void OnCrouch(InputAction.CallbackContext context)
     {
+        if(Paused) return;
         //Start Pressing Ctrl
         if(context.started && !Dead)
         {
@@ -305,6 +343,17 @@ public class PlayerMovement : MonoBehaviour
             rb.position += new Vector3(0,1,0);
 
             if(!HasJumped) groundCheck.GroundState(true);
+        }
+    }
+
+    public void OnPause(InputAction.CallbackContext context)
+    {
+        if(context.started)
+        {
+            if(Paused) Paused = false;
+            else       Paused = true;
+
+            Debug.Log("InputLock = " + Paused);
         }
     }
 }

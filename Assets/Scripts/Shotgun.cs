@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class Shotgun : Gun
 {
-    public override void AltShootStart()
+    public override void ShootStart()
     {
-        
+        base.ShootStart();
+        Debug.Log("Unique Shotgun Code");
     }
 
 }

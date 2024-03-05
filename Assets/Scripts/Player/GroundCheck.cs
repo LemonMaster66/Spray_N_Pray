@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class GroundCheck : MonoBehaviour
 {
-    public PlayerMovement playerMovement;
+    private PlayerMovement playerMovement;
     private Timers timers;
 
     public GameObject GroundObject;
@@ -11,6 +11,7 @@ public class GroundCheck : MonoBehaviour
     void Awake()
     {
         //Assign Components
+        playerMovement = GetComponentInParent<PlayerMovement>();
         timers = GetComponentInParent<Timers>();
     }
 

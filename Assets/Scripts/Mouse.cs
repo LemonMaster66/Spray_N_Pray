@@ -8,10 +8,7 @@ public class Mouse : MonoBehaviour
 
     public void Start()
     {
-        if(HideOnStart == true)
-        {
-            HideMouse();
-        }
+        if(HideOnStart == true) HideMouse();
     }
 
     public void ShowMouse()
@@ -26,3 +23,4 @@ public class Mouse : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
 }
+

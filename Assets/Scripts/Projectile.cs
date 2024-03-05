@@ -21,6 +21,8 @@ public class Projectile : MonoBehaviour
     private float MinDamage;                  // The Damage Applied at Max Falloff Distance
     private float Knockback;                  // The Force Applied to the Target from 1 Bullet
     private float DamageFalloff;              // The Time it takes to go from Damage to MinDamage
+    public  int   MultiShot;                  // Number Bullets Shot at the Same Time
+    public  float MultiShotInterval;          // Time Between Each MultiShot Bullet
     private int   RicochetCount;              // The Number of Times it Bounces before Destroying
     private float RicochetMultiplier;         // The Damage Multiplier Per Ricochet
     private int   PenetrateCount;             // The Amount of Targets it Pierces Through
@@ -52,10 +54,10 @@ public class Projectile : MonoBehaviour
     {
         if(!Attatched) rb.velocity += Vector3.down * Gravity/150;
 
+        _age += Time.deltaTime;
+
         if(DamageFalloff > 0 && !Impacted)
         {
-            _age += Time.deltaTime;  // Increment age each fixed frame
-
             float falloffFactor = Mathf.Clamp01(Mathf.SmoothStep(0, 1, _age/2 / DamageFalloff));
             finalDamage = Mathf.Lerp(finalDamage, MinDamage, falloffFactor);
         }
@@ -65,7 +67,7 @@ public class Projectile : MonoBehaviour
 
     public virtual void OnCollisionEnter(Collision collision)
     {
-        // Knockback
+        // Projectile Knockback
         if (collision.rigidbody != null) collision.rigidbody.velocity += (collision.relativeVelocity.normalized*-1 * Knockback)/3;
 
         //Hit Enemy
@@ -140,6 +142,8 @@ public class Projectile : MonoBehaviour
         MinDamage           = gun.MinDamage;
         Knockback           = gun.Knockback;
         DamageFalloff       = gun.DamageFalloff;
+        MultiShot           = gun.MultiShot;
+        MultiShotInterval   = gun.MultiShotInterval;
         ricoRemaining       = gun.RicochetCount;
         RicochetMultiplier  = gun.RicochetMultiplier;
         PenetrateCount      = gun.PenetrateCount;
@@ -150,7 +154,11 @@ public class Projectile : MonoBehaviour
         SplashDamage        = gun.SplashDamage;
         ExplosionKnockback  = gun.ExplosionKnockback;
 
-        if(gun.MultiShot > 1) Damage /= gun.MultiShot;
+        if(MultiShot > 1) 
+        {
+            Damage /= MultiShot;
+            Knockback /= MultiShot;
+        }
         finalDamage = Damage;
     }
 }
