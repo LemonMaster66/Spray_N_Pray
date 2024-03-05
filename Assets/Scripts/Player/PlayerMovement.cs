@@ -96,16 +96,7 @@ public class PlayerMovement : MonoBehaviour
             //Gravity
             rb.AddForce(Physics.gravity * Gravity /10);
 
-            //max speed
-            if (rb.velocity.magnitude > MaxSpeed)
-            {
-                // Get the velocity direction
-                Vector3 newVelocity = rb.velocity;
-                newVelocity.y = 0f;
-                newVelocity = Vector3.ClampMagnitude(newVelocity, MaxSpeed);
-                newVelocity.y = rb.velocity.y;
-                rb.velocity = newVelocity;
-            }
+            
         #endregion
         //**********************************
         #region PerFrame Calculations
@@ -236,12 +227,32 @@ public class PlayerMovement : MonoBehaviour
         SlideState(false);
 
         rb.AddForce(Vector3.up * JumpHeight, ForceMode.VelocityChange);
+
+        LockToMaxSpeed();
     }
     private void WallJump()
     {
+        AgainstWall = false;
+        wallCheck.AgainstWall = false;
+
+        wallCheck.WallJumpsLeft--;
+
         rb.velocity = new Vector3(0, 0, 0);
         rb.AddForce(Vector3.up * (JumpForce-3), ForceMode.VelocityChange);
         rb.AddForce(wallCheck.WallCollision.contacts[0].normal.normalized*150, ForceMode.VelocityChange);
+    }
+
+    public void LockToMaxSpeed()
+    {
+        if (rb.velocity.magnitude > MaxSpeed)
+        {
+            // Get the velocity direction
+            Vector3 newVelocity = rb.velocity;
+            newVelocity.y = 0f;
+            newVelocity = Vector3.ClampMagnitude(newVelocity, MaxSpeed);
+            newVelocity.y = rb.velocity.y;
+            rb.velocity = newVelocity;
+        }
     }
 
     public void SetGrounded(bool state) 

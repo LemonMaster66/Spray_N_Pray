@@ -4,6 +4,7 @@ public class GroundCheck : MonoBehaviour
 {
     private PlayerMovement playerMovement;
     private PlayerSFX      playerSFX;
+    private WallCheck      wallCheck;
     private Timers         timers;
 
     public GameObject GroundObject;
@@ -14,6 +15,7 @@ public class GroundCheck : MonoBehaviour
         //Assign Components
         playerMovement = GetComponentInParent<PlayerMovement>();
         playerSFX      = GetComponentInParent<PlayerSFX>();
+        wallCheck      = FindAnyObjectByType<WallCheck>();
         timers         = GetComponentInParent<Timers>();
     }
 
@@ -49,6 +51,7 @@ public class GroundCheck : MonoBehaviour
         GroundObject = other.gameObject;
 
         timers.SlideJumpStorage = 0.4f;
+        wallCheck.WallJumpsLeft = 3;
 
         GroundState(true);
 

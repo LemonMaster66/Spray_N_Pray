@@ -10,6 +10,8 @@ public class WallCheck : MonoBehaviour
     public Collider SlipperyWalls;
     public bool AgainstWall;
 
+    private float againstWallTimer;
+
     public int WallJumpsLeft = 3;
 
     void Awake()
@@ -26,9 +28,17 @@ public class WallCheck : MonoBehaviour
         {
             SlipperyWalls.material.dynamicFriction -= Time.deltaTime/1.8f;
         }
-        if(SlipperyWalls.material.dynamicFriction < 0)
+        if(SlipperyWalls.material.dynamicFriction < 0.2)
         {
             SlipperyWalls.material.dynamicFriction = 0;
+        }
+
+        if(againstWallTimer > 0) againstWallTimer -= Time.deltaTime;
+        if(againstWallTimer < 0)
+        {
+            againstWallTimer = 0;
+            AgainstWall = false;
+            playerMovement.SetAgainstWall(false);
         }
     }
 
@@ -54,12 +64,11 @@ public class WallCheck : MonoBehaviour
         if (collision.gameObject == playerMovement.gameObject) return;
         playerMovement.SetAgainstWall(true);
         WallCollision = collision;
+        AgainstWall = true;
 
         if(WallJumpsLeft > 0 && !playerMovement.Grounded) SlipperyWalls.material.dynamicFriction = 0.6f;
 
         timers.SlideJumpStorage = 0.4f;
-
-        AgainstWall = true;
 
         if(timers.JumpBuffer  > 0) playerMovement.Jump();
     }
@@ -67,9 +76,8 @@ public class WallCheck : MonoBehaviour
     private void OnCollisionExit(Collision collision)
     {
         if (collision.gameObject == playerMovement.gameObject) return;
-        playerMovement.SetAgainstWall(false);
-        WallCollision = null;
-        AgainstWall = false;
+        
+        againstWallTimer = 0.2f;
     }
 
     private void OnCollisionStay(Collision collision)
