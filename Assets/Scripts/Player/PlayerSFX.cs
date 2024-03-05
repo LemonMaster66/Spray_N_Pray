@@ -4,31 +4,58 @@ using UnityEngine;
 
 public class PlayerSFX : MonoBehaviour
 {
-    public PlayerMovement playerController;
-    public GroundCheck groundCheck; 
+    private PlayerMovement playerController;
+    private GroundCheck groundCheck;
+    private WallCheck wallCheck;
 
-    public int VolumeDivide = 60;
-    public float FallingVelocity;
+    public GameObject AudioPrefab;
 
     [Header("Physics Sounds")]
-    public AudioSource Roll;
-    public AudioSource JumpAudio;
-    public AudioSource LandAudio;
+    public AudioClip Step;
+    public AudioClip Jump;
+    public AudioClip Land;
+    public AudioClip Dash;
+    public AudioClip LongJump;
+    public AudioClip Slide;
+    public AudioClip SlideJump;
+    public AudioClip FastFalling;
 
-    [Header("Death")]
-    public AudioSource Death;
+
+    void Awake()
+    {
+        playerController = GetComponent<PlayerMovement>();
+        groundCheck = GetComponentInChildren<GroundCheck>();
+        wallCheck   = GetComponentInChildren<WallCheck>();
+    }
 
 
     void FixedUpdate()
     {
-        if(playerController.Grounded)
-        {
-            Roll.volume = playerController.rb.velocity.magnitude/100;
-        }
-        else
-        {
-            LandAudio.volume = playerController.rb.velocity.y*-1 / VolumeDivide;
-            Roll.volume = 0;
-        }
+        
+    }
+
+
+
+    public void PlaySound(AudioClip audioClip, float PitchVariation, float Volume = 1)
+    {
+        GameObject AudioObj = Instantiate(AudioPrefab, playerController.transform.position, Quaternion.identity, this.transform);
+        AudioSource audioSource = AudioObj.GetComponent<AudioSource>();
+
+        audioSource.clip   =  audioClip;
+        audioSource.volume =  Volume;
+        audioSource.pitch  += Random.Range(-PitchVariation, PitchVariation);
+
+        Destroy(AudioObj, audioClip.length);
+    }
+    public void PlayRandomSound(AudioClip[] audioClip, float PitchVariation)
+    {
+        GameObject AudioObj = Instantiate(AudioPrefab, playerController.transform.position, Quaternion.identity, this.transform);
+        AudioSource audioSource = AudioObj.GetComponent<AudioSource>();
+
+        AudioClip RandomClip = audioClip[Random.Range(0, audioClip.Length-1)];
+        audioSource.clip  = RandomClip;
+        audioSource.pitch += Random.Range(-PitchVariation, PitchVariation);
+
+        Destroy(AudioObj, RandomClip.length);
     }
 }

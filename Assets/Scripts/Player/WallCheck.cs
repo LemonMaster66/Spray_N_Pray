@@ -3,8 +3,9 @@ using UnityEngine;
 public class WallCheck : MonoBehaviour
 {
     private PlayerMovement playerMovement;
-    private Timers timers;
-
+    private PlayerSFX      playerSFX;
+    private Timers         timers;
+ 
     public Collision WallCollision;
     public Collider SlipperyWalls;
     public bool AgainstWall;
@@ -16,6 +17,7 @@ public class WallCheck : MonoBehaviour
         //Assign Components
         playerMovement = GetComponentInParent<PlayerMovement>();
         timers         = GetComponentInParent<Timers>();
+        playerSFX      = GetComponentInParent<PlayerSFX>();
     }
 
     void FixedUpdate()

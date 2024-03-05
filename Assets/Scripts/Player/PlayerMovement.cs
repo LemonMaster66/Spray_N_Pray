@@ -62,8 +62,9 @@ public class PlayerMovement : MonoBehaviour
         [HideInInspector] public Transform    Camera;
 
         private Timers       timers;
-        public GroundCheck  groundCheck;
-        public WallCheck    wallCheck;
+        private GroundCheck  groundCheck;
+        private WallCheck    wallCheck;
+        private PlayerSFX    playerSFX;
     #endregion
 
 
@@ -77,6 +78,7 @@ public class PlayerMovement : MonoBehaviour
         groundCheck  = GetComponentInChildren<GroundCheck>();
         wallCheck    = GetComponentInChildren<WallCheck>();
         timers       = GetComponent<Timers>();
+        playerSFX    = GetComponent<PlayerSFX>();
 
         //Component Values
         rb.useGravity = false;

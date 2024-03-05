@@ -3,7 +3,8 @@ using UnityEngine;
 public class GroundCheck : MonoBehaviour
 {
     private PlayerMovement playerMovement;
-    private Timers timers;
+    private PlayerSFX      playerSFX;
+    private Timers         timers;
 
     public GameObject GroundObject;
     public bool Grounded;
@@ -12,7 +13,8 @@ public class GroundCheck : MonoBehaviour
     {
         //Assign Components
         playerMovement = GetComponentInParent<PlayerMovement>();
-        timers = GetComponentInParent<Timers>();
+        playerSFX      = GetComponentInParent<PlayerSFX>();
+        timers         = GetComponentInParent<Timers>();
     }
 
     public bool CheckGround()

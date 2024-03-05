@@ -24,6 +24,7 @@ MonoBehaviour:
     - 3ee6d5ca7f043da42b6102fdfb127d17
     - ad7b7d793f8b6a24a8044ff9c75c2ba7
     - 21cec37b914af0543830eb62bef15a5b
+    - 8328993b7520bc7459c20193476ff808
     values:
     - colorIndex: 8
       iconNameOrGuid: cs Script Icon
@@ -45,3 +46,5 @@ MonoBehaviour:
       iconNameOrGuid: AnimationClip Icon
     - colorIndex: 1
       iconNameOrGuid: ScriptableObject Icon
+    - colorIndex: 9
+      iconNameOrGuid: 

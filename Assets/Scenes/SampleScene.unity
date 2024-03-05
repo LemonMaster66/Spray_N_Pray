@@ -3593,6 +3593,7 @@ Transform:
   - {fileID: 2128628228}
   - {fileID: 172379932}
   - {fileID: 71042123}
+  - {fileID: 1679164799}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1595419923
@@ -3831,8 +3832,6 @@ MonoBehaviour:
   _gravity: 0
   rb: {fileID: 0}
   Camera: {fileID: 0}
-  groundCheck: {fileID: 0}
-  wallCheck: {fileID: 0}
 --- !u!114 &1595419926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3964,6 +3963,62 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 2051210710}
+--- !u!1 &1679164798
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1679164799}
+  - component: {fileID: 1679164800}
+  m_Layer: 3
+  m_Name: PlayerSFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1679164799
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1679164798}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1595419922}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1679164800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1679164798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 929f3c0809ef6594da19bc6a613f2991, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AudioPrefab: {fileID: 3792406121718901701, guid: 9156ca3a0803cba48b1ac6383b2b79a1,
+    type: 3}
+  VolumeDivide: 60
+  Step: {fileID: 0}
+  Jump: {fileID: 0}
+  Land: {fileID: 0}
+  Slam: {fileID: 0}
+  Dash: {fileID: 0}
+  LongJump: {fileID: 0}
+  Slide: {fileID: 0}
+  SlideJump: {fileID: 0}
+  FastFalling: {fileID: 0}
 --- !u!1 &1974412656
 GameObject:
   m_ObjectHideFlags: 0
