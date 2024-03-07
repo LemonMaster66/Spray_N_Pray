@@ -2,6 +2,7 @@ using System;
 using Unity.Burst.Intrinsics;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.ProBuilder.MeshOperations;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -175,8 +176,15 @@ public class PlayerMovement : MonoBehaviour
         if(Paused) return;
         if(context.started && !Dead)
         {
-            if((Grounded || timers.CoyoteTime > 0) && !HasJumped) Jump();
-            else if(AgainstWall && wallCheck.WallJumpsLeft > 0 && !Grounded) WallJump();
+
+            if(!Grounded && AgainstWall && wallCheck.WallJumpsLeft > 0) WallJump();
+
+            else if((Grounded || timers.CoyoteTime > 0) && Dashing && DashCount > 1) LongJump();
+
+            else if((Grounded || timers.CoyoteTime > 0) && Sliding) SlideJump();
+
+            else if((Grounded || timers.CoyoteTime > 0) && !HasJumped) Jump();
+
             else if(!Grounded || timers.CoyoteTime == 0) timers.JumpBuffer = 0.15f;
         }
     }
@@ -184,22 +192,6 @@ public class PlayerMovement : MonoBehaviour
     {
         HasJumped = true;
         float JumpHeight = JumpForce;
-
-        if(AgainstWall && wallCheck.WallJumpsLeft > 0 && !Grounded)
-        {
-            WallJump();
-            return;
-        }
-        if(Dashing && DashCount > 1) //Long Jump
-        {
-            LongJump();
-            return;
-        }
-        if(Sliding) //Slide Jump
-        {
-            SlideJump();
-            return;
-        }
         
         playerSFX.PlaySound(playerSFX.Jump, 1f, 1f, 0.15f);
         Debug.Log("Jump");
@@ -209,6 +201,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void LongJump()
     {
+        HasJumped = true;
         float JumpHeight = JumpForce -8;
         LongJumping = true;
         MaxSpeed = 70;
@@ -222,6 +215,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void SlideJump()
     {
+        HasJumped = true;
         SlideJumping = true;
         float JumpHeight = JumpForce;
 
@@ -240,6 +234,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void WallJump()
     {
+        HasJumped = true;
         AgainstWall = false;
         wallCheck.AgainstWall = false;
 
@@ -252,6 +247,8 @@ public class PlayerMovement : MonoBehaviour
 
         playerSFX.PlaySound(playerSFX.Jump, 0.85f+WallJumpsUsed/5, 1, 0f);
         print(0.3f+WallJumpsUsed/3);
+
+        Debug.Log("WallJump");
     }
 
     public void LockToMaxSpeed()
