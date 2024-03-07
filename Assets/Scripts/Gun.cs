@@ -20,11 +20,11 @@ public class Gun : MonoBehaviour
     public bool CanParryBullet    = false;   // Punch after Shooting to Parry Your Own Bullets
     public bool IgniteEnemies     = false;   // Sets Enemies on Fire
     public bool SelfDamage        = false;   // Can Deal Damage to Yourself
-    public bool InheritVelocity   = false;   // Adds the Players Velocity to the Projectile
 
     [Header("Properties")]
     public float Damage;                     // Damage on Hit                                             |  0 = None
     public float MinDamage;                  // The Damage Applied at Max Falloff Distance                |  0 = None
+    public float DamageFalloff;              // The Time it takes to go from Damage to MinDamage          |  0 = Disabled
     public int   Ammo;                       // Bullets Shot Before Reloading                             |  0 = Unlimited
     public float AttackSpeed;                // Time Between Shots                                        |  0 = 1 Frame
     public float ReloadSpeed;                // Time Taken to Reload                                      |  0 = Instant
@@ -32,16 +32,13 @@ public class Gun : MonoBehaviour
     public float MultiShotInterval;          // Time Between Each MultiShot Bullet                        |  0 = Instant
     public float Spread;                     // The Amount that Each Bullet Strays from the Target        |  0 = None
     public float Knockback;                  // The Force Applied to the Target from 1 Bullet             |  0 = None
-    public float DamageFalloff;              // The Time it takes to go from Damage to MinDamage           |  0 = Disabled
     public int   RicochetCount;              // The Number of Times it Bounces before Destroying          |  0 = None
     public float RicochetMultiplier = 1;     // The Damage Multiplier Per Ricochet                        |  0 = None
     public int   PenetrateCount;             // The Amount of Targets it Pierces Through                  |  0 = None
 
-    [Header("Hitscan Properties")]
-    public float BulletTrailSpeed = 400f;    // The time it takes for the Bullet to Reach the Target      |  0 = Instant
-
     [Header("Projectile Properties")]
-    public bool  ProjectileSticky;           // Bullets get Stuck to whatever they Collide with           |  0 = Unlimited
+    public bool  InheritVelocity;            // Adds the Players Velocity to the Projectile
+    public bool  ProjectileSticky;           // Bullets get Stuck to whatever they Collide with
     public float ProjectileSpeed;            // The Speed of the Bullet                                   |  0 = Frozen
     public float ProjectileGravity;          // The Gravity Force of the Bullet                           |  0 = None
     public float ProjectileLifeSpan;         // The Time it takes for the Projectile Dies                 |  0 = Unlimited
@@ -124,7 +121,6 @@ public class Gun : MonoBehaviour
         // Checks
         if (!CanShoot || AttackCooldown || MultiShotCooldown) return;
 
-
         // MultiShot
         if(MultiShot < 2) StartCoroutine(Shoot(0));
         else if(MultiShot > 1)
@@ -136,45 +132,28 @@ public class Gun : MonoBehaviour
             }
         }
         MultiShotCooldown = true;
-        multiShotCooldownTime -= MultiShotInterval;
-        
+        multiShotCooldownTime -= MultiShotInterval; 
     }
+
     private IEnumerator Shoot(int BulletNumber)
     {
         yield return new WaitForSeconds(BulletNumber * MultiShotInterval);
 
-        Vector3 shootVector = cam.transform.forward;
-        if (Spread != 0)
-        {
-            shootVector.x += UnityEngine.Random.Range(-Spread / 200, Spread / 200);
-            shootVector.y += UnityEngine.Random.Range(-Spread / 200, Spread / 200);
-            shootVector.z += UnityEngine.Random.Range(-Spread / 200, Spread / 200);
-        }
-        shootVector = shootVector.normalized;
-
-        FinalDamage = Damage;
-        if(MultiShot != 0) FinalDamage /= MultiShot;
+        Vector3 shootVector = CalculateShootVector();
 
         //****************************************************************
         //Hitscan
         if (!Projectile)
         {
-            //**********************************
-            // Epic Hit
             if (Physics.Raycast(cam.transform.position, shootVector, out RaycastHit hit, 100000, layerMask))
             {
                 GameObject bullet = Instantiate(BulletPrefab, GunTip.position, Quaternion.identity);
-                StartCoroutine(SpawnHitscanBullet(bullet, hit.point, shootVector, hit, true, RicochetCount, FinalDamage, 0));
+                SpawnHitscanBullet(bullet, hit.point, shootVector, hit);
             }
-
-            //**********************************
-            // Epic Miss
-            else
+            else //Miss
             {
-                FinalDamage = 0;
                 GameObject bullet = Instantiate(BulletPrefab, GunTip.position, Quaternion.identity);
-                bullet.transform.parent = hit.transform;
-                StartCoroutine(SpawnHitscanBullet(bullet, shootVector*1000, shootVector, hit, false, 0, FinalDamage, 0));
+                SpawnHitscanBullet(bullet, shootVector*1000, shootVector, hit);
             }
         }
 
@@ -182,7 +161,7 @@ public class Gun : MonoBehaviour
         else
         {
             GameObject bullet = Instantiate(BulletPrefab, GunTip.position, Quaternion.identity);
-            StartCoroutine(SpawnProjectileBullet(bullet, shootVector, RicochetCount, FinalDamage, 0));
+            SpawnProjectileBullet(bullet, shootVector);
         }
     }
     
@@ -201,71 +180,32 @@ public class Gun : MonoBehaviour
         
     }
 
-    private IEnumerator SpawnHitscanBullet(GameObject bullet, Vector3 HitPoint, Vector3 shootVector, RaycastHit hit, bool Impacted, int ricoRemaining, float finalDamage, float finalDistance)
+
+    //***********************************************************
+    //***********************************************************
+    // Logic
+
+    public virtual Vector3 CalculateShootVector()
     {
-        Vector3 startPosition = bullet.transform.position;
-
-        float distance = Vector3.Distance(bullet.transform.position, HitPoint);
-        finalDistance += distance;
-        float startingDistance = distance;
-        
-        if(BulletTrailSpeed != 0)
+        Vector3 shootVector = cam.transform.forward;
+        if (Spread != 0)
         {
-            while(distance > 0)
-            {
-                bullet.transform.position = Vector3.Lerp(startPosition, HitPoint, 1 - (distance / startingDistance));
-                distance -= Time.deltaTime * BulletTrailSpeed;
-                
-                yield return null;
-            }
+            shootVector.x += UnityEngine.Random.Range(-Spread / 200, Spread / 200);
+            shootVector.y += UnityEngine.Random.Range(-Spread / 200, Spread / 200);
+            shootVector.z += UnityEngine.Random.Range(-Spread / 200, Spread / 200);
         }
-        bullet.transform.position = HitPoint;
-
-        if(Impacted)
-        {
-            //Spawn Particle System
-
-            // Hitscan Damage Distance Falloff
-            if (DamageFalloff != 0)
-            {
-                float falloffFactor = Mathf.Clamp01(Mathf.SmoothStep(0, 1, 1 - (finalDistance / DamageFalloff/100)));
-                finalDamage = Mathf.Lerp(MinDamage, Damage, falloffFactor);
-            }
-
-            // Knockback
-            if (hit.rigidbody != null) hit.rigidbody.AddForce(-hit.normal * Knockback * 10);
-
-            TargetPoint targetPoint = hit.transform.GetComponent<TargetPoint>();
-            if(targetPoint != null)
-            {
-                targetPoint.OnHit(finalDamage, HitPoint);
-            }
-
-          
-            if(ricoRemaining > 0)
-            {
-                yield return new WaitForSeconds(0.05f);
-
-                finalDamage *= RicochetMultiplier;
-
-                Vector3 ricochetDirection = Vector3.Reflect(shootVector, hit.normal);
-                if(Physics.Raycast(HitPoint, ricochetDirection, out RaycastHit ricoHit, 100000, layerMask))
-                {
-                    yield return StartCoroutine(SpawnHitscanBullet(bullet, ricoHit.point, ricochetDirection, ricoHit, true, ricoRemaining-1, finalDamage, finalDistance));
-                }
-                else
-                {
-                    yield return StartCoroutine(SpawnHitscanBullet(bullet, ricochetDirection*100, ricochetDirection, ricoHit, false, 0, 0, finalDistance));
-                }
-            }
-            else bullet.transform.parent = hit.transform;
-
-            if(DestroyOnImpact || (hit.collider != null && hit.collider.gameObject.layer == 3)) Destroy(bullet.gameObject, 0.1f);
-        }
-        else Destroy(bullet.gameObject, 0.1f);
+        shootVector = shootVector.normalized;
+        return shootVector;
     }
 
-    private IEnumerator SpawnProjectileBullet(GameObject bullet, Vector3 shootVector, int ricoRemaining, float finalDamage, float finalDistance)
+    private void SpawnHitscanBullet(GameObject bullet, Vector3 HitPoint, Vector3 shootVector, RaycastHit hit)
+    {
+        HitScan hitScan = bullet.GetComponent<HitScan>();
+        StartCoroutine(hitScan.SpawnHitscanBullet(HitPoint, shootVector, hit, true, RicochetCount, 0));
+        hitScan.AssignOrigin(this);
+    }
+
+    private void SpawnProjectileBullet(GameObject bullet, Vector3 shootVector)
     {
         Rigidbody rb = bullet.GetComponent<Rigidbody>();
 
@@ -273,8 +213,6 @@ public class Gun : MonoBehaviour
         if(InheritVelocity) rb.velocity += playerMovement.rb.velocity;
 
         bullet.GetComponent<Projectile>().AssignOrigin(this);
-
-        yield return null;
     }
 
     public void Explode()

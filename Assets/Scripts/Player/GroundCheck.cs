@@ -14,7 +14,7 @@ public class GroundCheck : MonoBehaviour
     {
         //Assign Components
         playerMovement = GetComponentInParent<PlayerMovement>();
-        playerSFX      = GetComponentInParent<PlayerSFX>();
+        playerSFX      = FindAnyObjectByType<PlayerSFX>();
         wallCheck      = FindAnyObjectByType<WallCheck>();
         timers         = GetComponentInParent<Timers>();
     }
@@ -35,7 +35,10 @@ public class GroundCheck : MonoBehaviour
             playerMovement.LongJumping = false;
             playerMovement.SlideJumping = false;
 
-            if(playerMovement.FastFalling) playerMovement.MaxSpeed = playerMovement._maxSpeed;
+            if(playerMovement.FastFalling)
+            {
+                playerMovement.MaxSpeed = playerMovement._maxSpeed;
+            }
             if(!playerMovement.Sliding && !playerMovement.Dashing && !playerMovement.LongJumping)
             {
                 playerMovement.MaxSpeed = playerMovement._maxSpeed;
@@ -52,6 +55,9 @@ public class GroundCheck : MonoBehaviour
 
         timers.SlideJumpStorage = 0.4f;
         wallCheck.WallJumpsLeft = 3;
+
+        if(playerMovement.FastFalling && timers.SlideBuffer == 0) playerSFX.PlaySound(playerSFX.Slam, 1, 0.4f, 0.05f);
+        else playerSFX.PlayRandomSound(playerSFX.Land, 1, 1f, 0.15f);
 
         GroundState(true);
 

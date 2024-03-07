@@ -19,8 +19,8 @@ public class Projectile : MonoBehaviour
     [Header("Properties")]
     private float Damage;                     // Damage on Hit
     private float MinDamage;                  // The Damage Applied at Max Falloff Distance
-    private float Knockback;                  // The Force Applied to the Target from 1 Bullet
     private float DamageFalloff;              // The Time it takes to go from Damage to MinDamage
+    private float Knockback;                  // The Force Applied to the Target from 1 Bullet
     public  int   MultiShot;                  // Number Bullets Shot at the Same Time
     public  float MultiShotInterval;          // Time Between Each MultiShot Bullet
     private int   RicochetCount;              // The Number of Times it Bounces before Destroying

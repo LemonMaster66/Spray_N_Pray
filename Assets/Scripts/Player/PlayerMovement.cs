@@ -44,7 +44,8 @@ public class PlayerMovement : MonoBehaviour
     #region Debug Stats
         [Header("Debug Stats")]
         public Vector3     PlayerVelocity;
-        public float       VelocityMagnitudeXZ;
+    private Vector3 LastFrameVelocity;
+    public float       VelocityMagnitudeXZ;
         public float       ForwardVelocityMagnitude;
         [HideInInspector]  public Vector3 CamF;
         [HideInInspector]  public Vector3 CamR;
@@ -78,7 +79,7 @@ public class PlayerMovement : MonoBehaviour
         groundCheck  = GetComponentInChildren<GroundCheck>();
         wallCheck    = GetComponentInChildren<WallCheck>();
         timers       = GetComponent<Timers>();
-        playerSFX    = GetComponent<PlayerSFX>();
+        playerSFX    = FindAnyObjectByType<PlayerSFX>();
 
         //Component Values
         rb.useGravity = false;
@@ -95,8 +96,6 @@ public class PlayerMovement : MonoBehaviour
         #region Physics Stuff
             //Gravity
             rb.AddForce(Physics.gravity * Gravity /10);
-
-            
         #endregion
         //**********************************
         #region PerFrame Calculations
@@ -167,6 +166,8 @@ public class PlayerMovement : MonoBehaviour
         Vector2 inputVector = MovementValue.ReadValue<Vector2>();
         MovementX = inputVector.x;
         MovementY = inputVector.y;
+
+        if(MovementX == 0 && MovementY == 0) playerSFX.stepTimer = 0;
     }
 
     public void OnJump(InputAction.CallbackContext context)
@@ -174,8 +175,8 @@ public class PlayerMovement : MonoBehaviour
         if(Paused) return;
         if(context.started && !Dead)
         {
-            if(AgainstWall && wallCheck.WallJumpsLeft > 0 && !Grounded) WallJump();
-            else if((Grounded || timers.CoyoteTime > 0) && !HasJumped) Jump();
+            if((Grounded || timers.CoyoteTime > 0) && !HasJumped) Jump();
+            else if(AgainstWall && wallCheck.WallJumpsLeft > 0 && !Grounded) WallJump();
             else if(!Grounded || timers.CoyoteTime == 0) timers.JumpBuffer = 0.15f;
         }
     }
@@ -183,7 +184,6 @@ public class PlayerMovement : MonoBehaviour
     {
         HasJumped = true;
         float JumpHeight = JumpForce;
-        timers.SlamJump += 3;
 
         if(AgainstWall && wallCheck.WallJumpsLeft > 0 && !Grounded)
         {
@@ -201,6 +201,8 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
         
+        playerSFX.PlaySound(playerSFX.Jump, 1f, 1f, 0.15f);
+        Debug.Log("Jump");
 
         if(!SlideJumping) JumpHeight += timers.SlamJump;
         rb.AddForce(Vector3.up * JumpHeight, ForceMode.VelocityChange);
@@ -214,6 +216,9 @@ public class PlayerMovement : MonoBehaviour
         EndDash();
 
         rb.AddForce(Vector3.up * JumpHeight, ForceMode.VelocityChange);
+
+        playerSFX.PlaySound(playerSFX.Jump, 1f, 1f, 0.15f);
+        Debug.Log("LongJump");
     }
     private void SlideJump()
     {
@@ -229,6 +234,9 @@ public class PlayerMovement : MonoBehaviour
         SlideState(false);
 
         rb.AddForce(Vector3.up * JumpHeight, ForceMode.VelocityChange);
+
+        playerSFX.PlaySound(playerSFX.Jump, 1f, 1f, 0.15f);
+        Debug.Log("SlideJump");
     }
     private void WallJump()
     {
@@ -236,10 +244,14 @@ public class PlayerMovement : MonoBehaviour
         wallCheck.AgainstWall = false;
 
         wallCheck.WallJumpsLeft--;
+        float WallJumpsUsed = 3-wallCheck.WallJumpsLeft;
 
         rb.velocity = new Vector3(0, 0, 0);
         rb.AddForce(Vector3.up * (JumpForce-3), ForceMode.VelocityChange);
         rb.AddForce(wallCheck.WallCollision.contacts[0].normal.normalized*40, ForceMode.VelocityChange);
+
+        playerSFX.PlaySound(playerSFX.Jump, 0.85f+WallJumpsUsed/5, 1, 0f);
+        print(0.3f+WallJumpsUsed/3);
     }
 
     public void LockToMaxSpeed()
