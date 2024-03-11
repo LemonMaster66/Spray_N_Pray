@@ -38,6 +38,14 @@ MonoBehaviour:
         - globalObjectIdString: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-71042122-0
         - globalObjectIdString: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-1440231579-0
         - globalObjectIdString: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-1679164798-0
+        - globalObjectIdString: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-1670857982-0
+        - globalObjectIdString: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-811317903-0
+        - globalObjectIdString: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-352667038-0
+        - globalObjectIdString: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-474901004-0
+        - globalObjectIdString: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-919132147794415917-0
+        - globalObjectIdString: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-1435364882-0
+        - globalObjectIdString: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-919132149155446097-1379044494
+        - globalObjectIdString: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-919132148387000799-0
         values:
         - colorIndex: 2
           iconNameOrGuid: AvatarMask On Icon
@@ -79,3 +87,19 @@ MonoBehaviour:
           iconNameOrGuid: AudioClip Icon
         - colorIndex: 4
           iconNameOrGuid: AudioClip Icon
+        - colorIndex: 0
+          iconNameOrGuid: AudioSource Icon
+        - colorIndex: 0
+          iconNameOrGuid: AudioSource Icon
+        - colorIndex: 0
+          iconNameOrGuid: AudioSource Icon
+        - colorIndex: 0
+          iconNameOrGuid: AudioSource Icon
+        - colorIndex: 1
+          iconNameOrGuid: 
+        - colorIndex: 0
+          iconNameOrGuid: AudioSource Icon
+        - colorIndex: 1
+          iconNameOrGuid: 
+        - colorIndex: 1
+          iconNameOrGuid: 

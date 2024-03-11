@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TargetPoint : MonoBehaviour
 {
-    private Target target;
+    public Target target;
 
     public float Multiplier = 1;
 

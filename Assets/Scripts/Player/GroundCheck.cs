@@ -56,13 +56,13 @@ public class GroundCheck : MonoBehaviour
         timers.SlideJumpStorage = 0.4f;
         wallCheck.WallJumpsLeft = 3;
 
-        if(playerMovement.FastFalling && timers.SlideBuffer == 0) playerSFX.PlaySound(playerSFX.Slam, 1, 0.4f, 0.05f);
-        else playerSFX.PlayRandomSound(playerSFX.Land, 1, 1f, 0.15f);
+        if(playerMovement.FastFalling && timers.SlideBuffer == 0) playerSFX.PlaySound(playerSFX.Slam, 1, 0.4f, 0.05f, false);
+        else playerSFX.PlayRandomSound(playerSFX.Land, 1, 1f, 0.15f, false);
 
         GroundState(true);
 
-        if(timers.JumpBuffer  > 0 && !playerMovement.LongJumping) playerMovement.Jump();
         if(timers.SlideBuffer > 0) playerMovement.SlideState(true);
+        else if(timers.JumpBuffer  > 0 && !playerMovement.LongJumping) playerMovement.JumpAll();
         if(playerMovement.VelocityMagnitudeXZ > playerMovement._maxSpeed+5)
         {
             playerMovement.SlideJumpPower = playerMovement.VelocityMagnitudeXZ;

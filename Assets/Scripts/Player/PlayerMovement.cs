@@ -18,6 +18,7 @@ public class PlayerMovement : MonoBehaviour
     private int   MaxHealth = 100;
     [Space(10)]
     public float  DashCount = 3;
+    private float DashUsedStorage = 3;
     public float  DashDuration = 0.2f;
     public float  DashPower = 10f;
     [Space(10)]
@@ -121,6 +122,12 @@ public class PlayerMovement : MonoBehaviour
             if(DashCount > 3) DashCount = 3;
             if(DashCount < 0) DashCount = 0;
 
+            if(Math.Floor(DashCount) -1 == DashUsedStorage)
+            {
+                DashUsedStorage++;
+                playerSFX.PlayRandomSound(playerSFX.RefreshDash, 0.6f + DashCount/3, 1, 0, false);
+            }
+
             if(Grounded && SlideJumpPower > 5 && timers.SlideJumpStorage == 0) SlideJumpPower = 5;
 
             LockToMaxSpeed();
@@ -174,101 +181,78 @@ public class PlayerMovement : MonoBehaviour
     public void OnJump(InputAction.CallbackContext context)
     {
         if(Paused) return;
-        if(context.started && !Dead)
+        if(context.started && !Dead) JumpAll();
+    }
+    public void JumpAll()
+    {
+        if(!Grounded && AgainstWall && wallCheck.WallJumpsLeft > 0) WallJump();
+        else if((Grounded || timers.CoyoteTime > 0) && Sliding) SlideJump();
+        else if((Grounded || timers.CoyoteTime > 0) && Dashing && DashCount > 1) LongJump();
+        else if((Grounded || timers.CoyoteTime > 0) && !HasJumped) Jump();
+        else if(!Grounded || timers.CoyoteTime == 0) timers.JumpBuffer = 0.15f;
+    }
+    
+    #region Jump Types
+        public void Jump()
         {
+            HasJumped = true;
+            float JumpHeight = JumpForce;
+            
+            playerSFX.PlaySound(playerSFX.Jump, 1f, 1f, 0.15f, false);
 
-            if(!Grounded && AgainstWall && wallCheck.WallJumpsLeft > 0) WallJump();
-
-            else if((Grounded || timers.CoyoteTime > 0) && Dashing && DashCount > 1) LongJump();
-
-            else if((Grounded || timers.CoyoteTime > 0) && Sliding) SlideJump();
-
-            else if((Grounded || timers.CoyoteTime > 0) && !HasJumped) Jump();
-
-            else if(!Grounded || timers.CoyoteTime == 0) timers.JumpBuffer = 0.15f;
+            if(!SlideJumping) JumpHeight += timers.SlamJump;
+            rb.AddForce(Vector3.up * JumpHeight, ForceMode.VelocityChange);
         }
-    }
-    public void Jump()
-    {
-        HasJumped = true;
-        float JumpHeight = JumpForce;
-        
-        playerSFX.PlaySound(playerSFX.Jump, 1f, 1f, 0.15f);
-        Debug.Log("Jump");
+        private void LongJump()
+        {
+            HasJumped = true;
+            float JumpHeight = JumpForce -8;
+            LongJumping = true;
+            MaxSpeed = 70;
+            DashCount--;
+            DashUsedStorage--;
+            EndDash();
 
-        if(!SlideJumping) JumpHeight += timers.SlamJump;
-        rb.AddForce(Vector3.up * JumpHeight, ForceMode.VelocityChange);
-    }
-    private void LongJump()
-    {
-        HasJumped = true;
-        float JumpHeight = JumpForce -8;
-        LongJumping = true;
-        MaxSpeed = 70;
-        DashCount -= 1;
-        EndDash();
+            rb.AddForce(Vector3.up * JumpHeight, ForceMode.VelocityChange);
 
-        rb.AddForce(Vector3.up * JumpHeight, ForceMode.VelocityChange);
+            playerSFX.PlaySound(playerSFX.Jump, 1f, 1f, 0.15f, false);
+        }
+        private void SlideJump()
+        {
+            HasJumped = true;
+            SlideJumping = true;
+            float JumpHeight = JumpForce;
 
-        playerSFX.PlaySound(playerSFX.Jump, 1f, 1f, 0.15f);
-        Debug.Log("LongJump");
-    }
-    private void SlideJump()
-    {
-        HasJumped = true;
-        SlideJumping = true;
-        float JumpHeight = JumpForce;
+            SlideJumpPower += (VelocityMagnitudeXZ/5) + timers.SlamJump*3;
+            if(SlideJumpPower > 120) SlideJumpPower = 120;
+            MaxSpeed = _maxSpeed + SlideJumpPower;
 
-        SlideJumpPower += (VelocityMagnitudeXZ/5) + timers.SlamJump*3;
-        if(SlideJumpPower > 120) SlideJumpPower = 120;
-        MaxSpeed = _maxSpeed + SlideJumpPower;
+            rb.AddForce(Movement * SlideJumpPower*20);
 
-        rb.AddForce(Movement * SlideJumpPower*20);
+            SlideState(false);
 
-        SlideState(false);
+            rb.AddForce(Vector3.up * JumpHeight, ForceMode.VelocityChange);
 
-        rb.AddForce(Vector3.up * JumpHeight, ForceMode.VelocityChange);
+            playerSFX.PlaySound(playerSFX.Jump, 1f, 1f, 0.15f, false);
+        }
+        private void WallJump()
+        {
+            HasJumped = true;
+            AgainstWall = false;
+            wallCheck.AgainstWall = false;
 
-        playerSFX.PlaySound(playerSFX.Jump, 1f, 1f, 0.15f);
-        Debug.Log("SlideJump");
-    }
-    private void WallJump()
-    {
-        HasJumped = true;
-        AgainstWall = false;
-        wallCheck.AgainstWall = false;
+            wallCheck.WallJumpsLeft--;
+            float WallJumpsUsed = 3-wallCheck.WallJumpsLeft;
 
-        wallCheck.WallJumpsLeft--;
-        float WallJumpsUsed = 3-wallCheck.WallJumpsLeft;
+            rb.velocity = new Vector3(0, 0, 0);
+            rb.AddForce(Vector3.up * (JumpForce-3), ForceMode.VelocityChange);
+            rb.AddForce(wallCheck.WallCollision.contacts[0].normal.normalized*40, ForceMode.VelocityChange);
 
-        rb.velocity = new Vector3(0, 0, 0);
-        rb.AddForce(Vector3.up * (JumpForce-3), ForceMode.VelocityChange);
-        rb.AddForce(wallCheck.WallCollision.contacts[0].normal.normalized*40, ForceMode.VelocityChange);
+            playerSFX.PlaySound(playerSFX.Jump, 0.9f+WallJumpsUsed/6, 1, 0f, false);
+        }
+    #endregion
+    
 
-        playerSFX.PlaySound(playerSFX.Jump, 0.85f+WallJumpsUsed/5, 1, 0f);
-        print(0.3f+WallJumpsUsed/3);
-
-        Debug.Log("WallJump");
-    }
-
-    public void LockToMaxSpeed()
-    {
-        // Get the velocity direction
-        Vector3 newVelocity = rb.velocity;
-        newVelocity.y = 0f;
-        newVelocity = Vector3.ClampMagnitude(newVelocity, MaxSpeed);
-        newVelocity.y = rb.velocity.y;
-        rb.velocity = newVelocity;
-    }
-
-    public void SetGrounded(bool state) 
-    {
-        Grounded = state;
-    }
-    public void SetAgainstWall(bool state) 
-    {
-        AgainstWall = state;
-    }
 
     //***********************************************************************
     //***********************************************************************
@@ -281,7 +265,8 @@ public class PlayerMovement : MonoBehaviour
         {
             Dashing = true;
             LongJumping = false;
-            DashCount -= 1;
+            DashCount--;
+            DashUsedStorage--;
             Gravity = 0;
             MaxSpeed = DashPower;
             timers.DashTime = DashDuration;
@@ -294,7 +279,10 @@ public class PlayerMovement : MonoBehaviour
             if(MovementX == 0 && MovementY == 0) Movement = CamF;
 
             rb.velocity = Movement * 100;
+
+            playerSFX.PlaySound(playerSFX.Dash, 1, 0.4f, 0.1f, false);
         }
+        else if(context.started && DashCount < 1) playerSFX.PlaySound(playerSFX.NoDashLeft, 1, 1, 0.1f, false);
     }
     public void EndDash()
     {
@@ -374,5 +362,40 @@ public class PlayerMovement : MonoBehaviour
 
             Debug.Log("InputLock = " + Paused);
         }
+    }
+
+
+
+    //***********************************************************************
+    //***********************************************************************
+    //Extra Logic
+
+    public void LockToMaxSpeed()
+    {
+        // Get the velocity direction
+        Vector3 newVelocity = rb.velocity;
+        newVelocity.y = 0f;
+        newVelocity = Vector3.ClampMagnitude(newVelocity, MaxSpeed);
+        newVelocity.y = rb.velocity.y;
+        rb.velocity = newVelocity;
+    }
+
+    public void SetGrounded(bool state) 
+    {
+        Grounded = state;
+    }
+    public void SetAgainstWall(bool state) 
+    {
+        AgainstWall = state;
+    }
+
+    public bool WalkingCheck()
+    {
+        if(MovementX != 0 || MovementY != 0)
+        {
+            if(Grounded && !Sliding) return true;
+            else return false;
+        }
+        else return false;
     }
 }

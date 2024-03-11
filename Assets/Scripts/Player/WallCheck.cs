@@ -70,7 +70,7 @@ public class WallCheck : MonoBehaviour
 
         timers.SlideJumpStorage = 0.4f;
 
-        if(timers.JumpBuffer  > 0) playerMovement.Jump();
+        if(timers.JumpBuffer  > 0 && !playerMovement.FastFalling) playerMovement.JumpAll();
     }
 
     private void OnCollisionExit(Collision collision)
