@@ -29,9 +29,12 @@ public class HitScan : MonoBehaviour
     private int   RicochetCount;              // The Number of Times it Bounces before Destroying          |  0 = None
     private float RicochetMultiplier = 1;     // The Damage Multiplier Per Ricochet                        |  0 = None
     private int   PierceCount;                // The Amount of Targets it Pierces Through                  |  0 = None
+    private float BulletTrailSpeed = 400f;    // The time it takes for the Bullet to Reach the Target      |  0 = Instant
 
-    [Header("Unique Properties")]
-    public float BulletTrailSpeed = 400f;    // The time it takes for the Bullet to Reach the Target      |  0 = Instant
+    [Header("Explosion Properties")]
+    private float ExplosionSize;              // The Size of the Explosion
+    private float ExplosionDamage;            // The Max Damage Recieved from being in the Explosion
+    private float ExplosionKnockback;         // The Force Applied to the Target away from the Explosion
 
     [Header("States")]
     private bool Impacted = false;
@@ -182,6 +185,10 @@ public class HitScan : MonoBehaviour
         RicochetCount       = gun.RicochetCount;
         RicochetMultiplier  = gun.RicochetMultiplier;
         PierceCount         = gun.PierceCount;
+
+        ExplosionSize       = gun.ExplosionSize;
+        ExplosionDamage     = gun.ExplosionDamage;
+        ExplosionKnockback  = gun.ExplosionKnockback;
 
         if(MultiShot > 1) 
         {

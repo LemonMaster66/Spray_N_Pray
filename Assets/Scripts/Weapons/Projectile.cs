@@ -31,7 +31,7 @@ public class Projectile : MonoBehaviour
 
     [Header("Explosion Properties")]
     private float ExplosionSize;              // The Size of the Explosion
-    private float SplashDamage;               // The Max Damage Recieved from being in the Explosion
+    private float ExplosionDamage;            // The Max Damage Recieved from being in the Explosion
     private float ExplosionKnockback;         // The Force Applied to the Target away from the Explosion
 
     [Header("States")]
@@ -151,7 +151,7 @@ public class Projectile : MonoBehaviour
         LifeSpan            = gun.ProjectileLifeSpan;
 
         ExplosionSize       = gun.ExplosionSize;
-        SplashDamage        = gun.SplashDamage;
+        ExplosionDamage     = gun.ExplosionDamage;
         ExplosionKnockback  = gun.ExplosionKnockback;
 
         if(MultiShot > 1) 

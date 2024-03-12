@@ -46,7 +46,7 @@ public class Gun : MonoBehaviour
 
     [Header("Explosion Properties")]
     public float ExplosionSize;              // The Size of the Explosion
-    public float SplashDamage;               // The Max Damage Recieved from being in the Explosion
+    public float ExplosionDamage;            // The Max Damage Recieved from being in the Explosion
     public float ExplosionKnockback;         // The Force Applied to the Target away from the Explosion
 
     [Header("States")]
