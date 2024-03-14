@@ -27,6 +27,9 @@ public class PlayerSFX : MonoBehaviour
     public AudioSource FastFall;
     public AudioSource Slide;
 
+    [Space(15)]
+    [Header("Gun General")]
+    public AudioClip ProjectileImpact;
 
     [Header("Piercer")]
     public AudioClip[] Piercer_Shoot;
@@ -38,6 +41,10 @@ public class PlayerSFX : MonoBehaviour
     public AudioClip Shotgun_Shoot;
     public AudioClip Shotgun_Charge;
     public AudioClip Shotgun_Rack;
+
+    [Header("Nailgun")]
+    public AudioClip[] Nailgun_Shoot;
+    //public AudioClip Nailgun_Whirr;
 
 
     [Header("Info")]

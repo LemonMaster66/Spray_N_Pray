@@ -46,6 +46,7 @@ MonoBehaviour:
         - globalObjectIdString: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-1435364882-0
         - globalObjectIdString: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-919132149155446097-1379044494
         - globalObjectIdString: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-919132148387000799-0
+        - globalObjectIdString: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-919132148323244098-0
         values:
         - colorIndex: 2
           iconNameOrGuid: AvatarMask On Icon
@@ -74,7 +75,7 @@ MonoBehaviour:
         - colorIndex: 1
           iconNameOrGuid: 
         - colorIndex: 1
-          iconNameOrGuid: 
+          iconNameOrGuid: Favorite
         - colorIndex: 0
           iconNameOrGuid: SphereCollider Icon
         - colorIndex: 0
@@ -96,10 +97,12 @@ MonoBehaviour:
         - colorIndex: 0
           iconNameOrGuid: AudioSource Icon
         - colorIndex: 1
-          iconNameOrGuid: 
+          iconNameOrGuid: Favorite
         - colorIndex: 0
           iconNameOrGuid: AudioSource Icon
         - colorIndex: 1
           iconNameOrGuid: 
         - colorIndex: 1
-          iconNameOrGuid: 
+          iconNameOrGuid: Favorite
+        - colorIndex: 1
+          iconNameOrGuid: Favorite

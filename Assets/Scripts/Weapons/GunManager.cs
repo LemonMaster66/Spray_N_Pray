@@ -5,13 +5,17 @@ using UnityEngine.InputSystem;
 
 public class GunManager : MonoBehaviour
 {
-    public GameObject[] Guns;
     public int ActiveGun = 0;
+
+    public GameObject[] Guns;
+    public bool[] HasGun;
+    private int GunCount;
 
 
     void Awake()
     {
-        SwapGun(ActiveGun);
+        if(HasGun[ActiveGun] != false) SwapGun(ActiveGun);
+        else Guns[ActiveGun].SetActive(false);
     }
     
 
@@ -36,6 +40,7 @@ public class GunManager : MonoBehaviour
 
             if(ActiveGun < 0)             ActiveGun = Guns.Length-1;
             if(ActiveGun > Guns.Length-1) ActiveGun = 0;
+
 
             if(Guns.Length > 1) SwapGun(ActiveGun);
         }

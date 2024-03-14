@@ -150,6 +150,7 @@ public class Gun : MonoBehaviour
     private IEnumerator Shoot(int BulletNumber)
     {
         yield return new WaitForSeconds(BulletNumber * MultiShotInterval);
+        ExtraShootFunctions();
 
         Vector3 shootVector = CalculateShootVector();
 
@@ -229,5 +230,10 @@ public class Gun : MonoBehaviour
     public void Explode()
     {
         Debug.Log("Boom");
+    }
+
+    public virtual void ExtraShootFunctions()
+    {
+
     }
 }

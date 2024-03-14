@@ -32,17 +32,20 @@ public class Shotgun : Gun
 
         animator.Play("Shotgun_Shoot", 0, 0.1f);
         playerSFX.PlaySound(playerSFX.Shotgun_Shoot, 1, 0.6f, 0.1f, false);
-        cameraFX.CameraShake(4.5f+AltCharge*2, 0.45f, 0.35f);
+        cameraFX.CameraShake(4.5f+AltCharge*7, 0.45f, 0.35f);
+
+        Charge(AltCharge);
+        AltCharge = 0;
 
         base.ShootStart();
 
-        AltCharge = 0;
-        Charge(AltCharge);
+        
     }
 
     public override void AltShootStart()
     {
         base.AltShootStart();
+        if (!CanShoot || AttackCooldown || MultiShotCooldown) return;
 
         if(AltCharge <= 3)
         {
@@ -61,22 +64,29 @@ public class Shotgun : Gun
         {
             Damage = _damage;
             MultiShot = _multishot;
+            Spread = 30;
+            Knockback = 30;
         }
         if(ChargeCount == 1)
         {
             Damage = 40;
             MultiShot = 16;
+            Spread = 45;
+            Knockback = 45;
         }
         if(ChargeCount == 2)
         {
             Damage = 60;
             MultiShot = 24;
+            Spread = 50;
+            Knockback = 60;
         }
         if(ChargeCount >= 3)
         {
-            Damage = 60;
-            MultiShot = 24;
-            //Explode
+            Damage = 80;
+            MultiShot = 30;
+            Spread = 60;
+            Knockback = 150;
         }
     }
 }

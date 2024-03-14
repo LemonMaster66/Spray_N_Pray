@@ -15,7 +15,7 @@ public class Visualisers : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Text1.text  = "Multishot: "         + gunManager.Guns[gunManager.ActiveGun].GetComponent<Gun>().MultiShot;
-        Text2.text  = "MultiShotInterval: " + gunManager.Guns[gunManager.ActiveGun].GetComponent<Gun>().MultiShotInterval;
+        //Text1.text  = "Multishot: "         + gunManager.Guns[gunManager.ActiveGun].GetComponent<Gun>().MultiShot;
+        //Text2.text  = "MultiShotInterval: " + gunManager.Guns[gunManager.ActiveGun].GetComponent<Gun>().MultiShotInterval;
     }
 }

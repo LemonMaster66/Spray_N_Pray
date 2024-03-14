@@ -7,6 +7,7 @@ public class Projectile : MonoBehaviour
 {
     private Gun OriginGun;
     private Rigidbody rb;
+    public List<Target> targetsHit = new List<Target>();
 
     [Header("Types")]
     private bool Sticky            = false;   // Bullets get Stuck to whatever they Collide with
@@ -41,16 +42,20 @@ public class Projectile : MonoBehaviour
     [Header("Info")]
     public float _age;
     public float finalDamage;
+    public int   pierceRemaining;
     public int   ricoRemaining;
     public int   ricoCount;
 
+    private PlayerSFX playerSFX;
 
-    void Awake()
+
+    public virtual void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        playerSFX = FindAnyObjectByType<PlayerSFX>();
     }
 
-    void FixedUpdate()
+    public virtual void FixedUpdate()
     {
         if(!Attatched) rb.velocity += Vector3.down * Gravity/150;
 
@@ -70,31 +75,55 @@ public class Projectile : MonoBehaviour
         // Projectile Knockback
         if (collision.rigidbody != null) collision.rigidbody.velocity += (collision.relativeVelocity.normalized*-1 * Knockback)/3;
 
-        //Hit Enemy
-        TargetPoint targetPoint = collision.gameObject.GetComponent<TargetPoint>();
+        // Hit Enemy
+        TargetPoint targetPoint = collision.transform.GetComponent<TargetPoint>();
         if(targetPoint != null)
         {
-            targetPoint.OnHit(finalDamage, transform.position);
-
-            if(ricoRemaining > 0 && RicoOnHit) Ricochet(collision);
-            else Impact(collision);
+            //Unique
+            if (!targetsHit.Contains(targetPoint.target))
+            {
+                pierceRemaining--;
+                targetsHit.Add(targetPoint.target);
+                targetPoint.OnHit(finalDamage, transform.position);
+            }
+            if(pierceRemaining > 0) Pierce(collision);
+            else
+            {
+                if(ricoRemaining > 0 && RicoOnHit)
+                {
+                    finalDamage *= RicochetMultiplier;
+                    Ricochet(collision);
+                }
+                else Impact(collision);
+            }
         }
-        //Hit Environment
         else
         {
-            if(ricoRemaining > 0) Ricochet(collision);
+            // Ricochet
+            if(ricoRemaining > 0)
+            {
+                finalDamage *= RicochetMultiplier;
+                Ricochet(collision);
+            }
             else Impact(collision);
         }
     }
 
-    void Ricochet(Collision collision)
+    public virtual void Ricochet(Collision collision)
     {
         rb.velocity = Vector3.Reflect(collision.relativeVelocity*-1, collision.contacts[0].normal);
         ricoRemaining--;
         finalDamage *= RicochetMultiplier;
     }
 
-    public void Impact(Collision collision)
+    public virtual void Pierce(Collision collision)
+    {
+        Vector3 StartPoint = transform.position + collision.relativeVelocity*-1 * 0.0075f;
+        transform.position = StartPoint;
+        rb.velocity = collision.relativeVelocity*-1f;
+    }
+
+    public virtual void Impact(Collision collision)
     {
         Impacted = true;
 
@@ -111,13 +140,13 @@ public class Projectile : MonoBehaviour
     }
 
 
-    public void DestroyProjectile()
+    public virtual void DestroyProjectile()
     {
         if(!ExploadOnDestroy) Destroy(gameObject);
         else Explode();
     }
 
-    public void Explode()
+    public virtual void Explode()
     {
         Debug.Log("Boom");
         Destroy(gameObject);
@@ -126,7 +155,7 @@ public class Projectile : MonoBehaviour
 
 
 
-    public void AssignOrigin(Gun gun)
+    public virtual void AssignOrigin(Gun gun)
     {
         OriginGun = gun;
 
@@ -160,5 +189,6 @@ public class Projectile : MonoBehaviour
             Knockback /= MultiShot;
         }
         finalDamage = Damage;
+        pierceRemaining = PierceCount+1;
     }
 }

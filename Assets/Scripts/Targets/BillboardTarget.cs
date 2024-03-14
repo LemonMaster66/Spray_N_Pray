@@ -22,17 +22,20 @@ public class BillboardTarget : Target
     {
         base.Update();
 
-        if(deadDurationTime > 0) deadDurationTime-= Time.deltaTime;
-        if(deadDurationTime <= 0.3f && !Reviving && Dead)
+        if(deadDurationTime != 0)
         {
-            animator.Play("Revive", 0, 0f);
-            Reviving = true;
-        }
-        if(deadDurationTime <= 0 && Reviving)
-        {
-            Reviving = false;
-            Dead = false;
-            Health = MaxHealth;
+            if(deadDurationTime > 0) deadDurationTime-= Time.deltaTime;
+            if(deadDurationTime <= 0.3f && !Reviving && Dead)
+            {
+                animator.Play("Revive", 0, 0f);
+                Reviving = true;
+            }
+            if(deadDurationTime <= 0 && Reviving)
+            {
+                Reviving = false;
+                Dead = false;
+                Health = MaxHealth;
+            }
         }
     }
 
@@ -56,5 +59,10 @@ public class BillboardTarget : Target
         if     (Damage <  MaxHealth/100*15)                               animator.Play("KillSmall", 0, 0f);
         else if(Damage >= MaxHealth/100*15  && Damage < MaxHealth/100*45) animator.Play("KillMedium", 0, 0f);
         else if(Damage >= MaxHealth/100*45)                               animator.Play("KillBig", 0, 0f);
+    }
+
+    public void Revive()
+    {
+        deadDurationTime = 0.001f;
     }
 }

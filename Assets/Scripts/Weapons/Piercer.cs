@@ -9,6 +9,7 @@ public class Piercer : Gun
     public float AltCoolDown = 0;
 
 
+
     public override void FixedUpdate()
     {
         base.FixedUpdate();
@@ -43,7 +44,7 @@ public class Piercer : Gun
     {
         // Checks
         HoldingShoot = true;
-        if (!CanShoot || AttackCooldown || MultiShotCooldown || AltCoolDown > 0) return;
+        if (!CanShoot || AttackCooldown || MultiShotCooldown || AltCoolDown > 0 || AltCharge > 0) return;
 
         PierceCount = 0;
         Damage = _damage;
@@ -58,6 +59,7 @@ public class Piercer : Gun
 
     public override void AltShootStart()
     {
+        if (!CanShoot || AltCoolDown > 0 || AltCharge > 0) return;
         base.AltShootStart();
 
         animator.SetFloat("Charge", 1, 0.2f, Time.deltaTime);
