@@ -15,6 +15,7 @@ MonoBehaviour:
   sceneDatas_byGuid:
     keys:
     - 99c9720ab356a0642a771bea13969a05
+    - dda75a30d1b24c445b819937992ee3ff
     values:
     - goDatas_byGlobalId:
         keys:
@@ -106,3 +107,69 @@ MonoBehaviour:
           iconNameOrGuid: Favorite
         - colorIndex: 1
           iconNameOrGuid: Favorite
+    - goDatas_byGlobalId:
+        keys:
+        - globalObjectIdString: GlobalObjectId_V1-2-dda75a30d1b24c445b819937992ee3ff-1595419918-0
+        - globalObjectIdString: GlobalObjectId_V1-2-dda75a30d1b24c445b819937992ee3ff-945361806-0
+        - globalObjectIdString: GlobalObjectId_V1-2-dda75a30d1b24c445b819937992ee3ff-1679164798-0
+        - globalObjectIdString: GlobalObjectId_V1-2-dda75a30d1b24c445b819937992ee3ff-1190297332-0
+        - globalObjectIdString: GlobalObjectId_V1-2-dda75a30d1b24c445b819937992ee3ff-1059557068-0
+        - globalObjectIdString: GlobalObjectId_V1-2-dda75a30d1b24c445b819937992ee3ff-410087039-0
+        - globalObjectIdString: GlobalObjectId_V1-2-dda75a30d1b24c445b819937992ee3ff-919132147794415917-0
+        - globalObjectIdString: GlobalObjectId_V1-2-dda75a30d1b24c445b819937992ee3ff-919132148387000799-0
+        - globalObjectIdString: GlobalObjectId_V1-2-dda75a30d1b24c445b819937992ee3ff-919132148323244098-0
+        - globalObjectIdString: GlobalObjectId_V1-2-dda75a30d1b24c445b819937992ee3ff-1510630087-0
+        - globalObjectIdString: GlobalObjectId_V1-2-dda75a30d1b24c445b819937992ee3ff-811317903-0
+        - globalObjectIdString: GlobalObjectId_V1-2-dda75a30d1b24c445b819937992ee3ff-474901004-0
+        - globalObjectIdString: GlobalObjectId_V1-2-dda75a30d1b24c445b819937992ee3ff-330585543-0
+        - globalObjectIdString: GlobalObjectId_V1-2-dda75a30d1b24c445b819937992ee3ff-99183662-0
+        - globalObjectIdString: GlobalObjectId_V1-2-dda75a30d1b24c445b819937992ee3ff-1496955880-0
+        - globalObjectIdString: GlobalObjectId_V1-2-dda75a30d1b24c445b819937992ee3ff-2128628227-0
+        - globalObjectIdString: GlobalObjectId_V1-2-dda75a30d1b24c445b819937992ee3ff-172379931-0
+        - globalObjectIdString: GlobalObjectId_V1-2-dda75a30d1b24c445b819937992ee3ff-71042122-0
+        - globalObjectIdString: GlobalObjectId_V1-2-dda75a30d1b24c445b819937992ee3ff-8911297850047732680-338522392
+        - globalObjectIdString: GlobalObjectId_V1-2-dda75a30d1b24c445b819937992ee3ff-8911297850047732680-1854179761943498014
+        - globalObjectIdString: GlobalObjectId_V1-2-dda75a30d1b24c445b819937992ee3ff-8911297850047732680-1183043397
+        values:
+        - colorIndex: 2
+          iconNameOrGuid: 
+        - colorIndex: 3
+          iconNameOrGuid: 
+        - colorIndex: 4
+          iconNameOrGuid: 
+        - colorIndex: 8
+          iconNameOrGuid: 
+        - colorIndex: 0
+          iconNameOrGuid: Canvas Icon
+        - colorIndex: 0
+          iconNameOrGuid: DirectionalLight Icon
+        - colorIndex: 1
+          iconNameOrGuid: Favorite
+        - colorIndex: 1
+          iconNameOrGuid: Favorite
+        - colorIndex: 1
+          iconNameOrGuid: Favorite
+        - colorIndex: 1
+          iconNameOrGuid: Favorite
+        - colorIndex: 0
+          iconNameOrGuid: AudioClip Icon
+        - colorIndex: 0
+          iconNameOrGuid: AudioSource Icon
+        - colorIndex: 5
+          iconNameOrGuid: 
+        - colorIndex: 1
+          iconNameOrGuid: 
+        - colorIndex: 1
+          iconNameOrGuid: 
+        - colorIndex: 0
+          iconNameOrGuid: SphereCollider Icon
+        - colorIndex: 0
+          iconNameOrGuid: CapsuleCollider Icon
+        - colorIndex: 0
+          iconNameOrGuid: CapsuleCollider Icon
+        - colorIndex: 7
+          iconNameOrGuid: 
+        - colorIndex: 7
+          iconNameOrGuid: 
+        - colorIndex: 7
+          iconNameOrGuid: 

@@ -36,10 +36,6 @@ public class HitScan : MonoBehaviour
     private float ExplosionDamage;            // The Max Damage Recieved from being in the Explosion
     private float ExplosionKnockback;         // The Force Applied to the Target away from the Explosion
 
-    [Header("States")]
-    private bool Impacted = false;
-    private bool RayHit = false;
-
     [Header("Info")]
     public float _age;
     public float finalDamage;

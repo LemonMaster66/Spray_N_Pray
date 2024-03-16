@@ -29,7 +29,7 @@ public class PlayerSFX : MonoBehaviour
 
     [Space(15)]
     [Header("Gun General")]
-    public AudioClip ProjectileImpact;
+    public AudioClip WeaponSwap;
 
     [Header("Piercer")]
     public AudioClip[] Piercer_Shoot;
@@ -44,7 +44,6 @@ public class PlayerSFX : MonoBehaviour
 
     [Header("Nailgun")]
     public AudioClip[] Nailgun_Shoot;
-    //public AudioClip Nailgun_Whirr;
 
 
     [Header("Info")]
@@ -99,7 +98,7 @@ public class PlayerSFX : MonoBehaviour
 
 
 
-    public void PlaySound(AudioClip audioClip, float Pitch, float Volume, float PitchVariation, bool Loop)
+    public void PlaySound(AudioClip audioClip, float Pitch = 1, float Volume = 1, float PitchVariation = 0, bool Loop = false)
     {
         GameObject AudioObj = Instantiate(AudioPrefab, PC.transform.position, Quaternion.identity, transform);
         AudioObj.name = audioClip.name;

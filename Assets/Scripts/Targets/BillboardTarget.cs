@@ -59,6 +59,8 @@ public class BillboardTarget : Target
         if     (Damage <  MaxHealth/100*15)                               animator.Play("KillSmall", 0, 0f);
         else if(Damage >= MaxHealth/100*15  && Damage < MaxHealth/100*45) animator.Play("KillMedium", 0, 0f);
         else if(Damage >= MaxHealth/100*45)                               animator.Play("KillBig", 0, 0f);
+
+        GetComponentInParent<RoomCleared>().CompleteCheck();
     }
 
     public void Revive()

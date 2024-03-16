@@ -48,6 +48,7 @@ public class Piercer : Gun
 
         PierceCount = 0;
         Damage = _damage;
+        Knockback = 18;
 
         animator.Play("Piercer_Shoot", 0, 0.1f);
         playerSFX.PlayRandomSound(playerSFX.Piercer_Shoot, 1, 0.6f, 0.1f, false);
@@ -76,6 +77,7 @@ public class Piercer : Gun
         PierceCount = 4;
         AltCoolDown = 2.5f;
         Damage = _damage * 5;
+        Knockback = 50;
 
         animator.Play("Piercer_Shoot", 0, 0.1f);
         playerSFX.PlayRandomSound(playerSFX.Piercer_PierceShoot, 1, 0.9f, 0.1f, false);

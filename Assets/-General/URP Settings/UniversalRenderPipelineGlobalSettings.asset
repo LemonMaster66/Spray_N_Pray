@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Settings:
     m_SettingsList: []
+    m_RuntimeSettings: []
   m_AssetVersion: 5
   m_DefaultVolumeProfile: {fileID: 11400000, guid: 4377c8fcb0d1dfe42a228b26e09d870c,
     type: 2}
@@ -28,6 +29,25 @@ MonoBehaviour:
   lightLayerName5: Light Layer 5
   lightLayerName6: Light Layer 6
   lightLayerName7: Light Layer 7
+  apvScenesData:
+    m_ObsoleteSerializedBakingSets: []
+    sceneToBakingSet:
+      m_Keys:
+      - dda75a30d1b24c445b819937992ee3ff
+      m_Values:
+      - {fileID: 11400000, guid: dedfe5b9c1e586141abeaa51e27c19a0, type: 2}
+    bakingSets:
+    - {fileID: 11400000, guid: dedfe5b9c1e586141abeaa51e27c19a0, type: 2}
+    sceneBounds:
+      m_Keys:
+      - dda75a30d1b24c445b819937992ee3ff
+      m_Values:
+      - m_Center: {x: 0, y: -40.5, z: 405}
+        m_Extent: {x: 81, y: 121.5, z: 486}
+    hasProbeVolumes:
+      m_Keys:
+      - dda75a30d1b24c445b819937992ee3ff
+      m_Values: 01
   m_ShaderStrippingSetting:
     m_Version: 0
     m_ExportShaderVariants: 0

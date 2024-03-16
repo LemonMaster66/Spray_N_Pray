@@ -238,6 +238,8 @@ public class PlayerMovement : MonoBehaviour
         private void WallJump()
         {
             HasJumped = true;
+            LongJumping = false;
+            SlideJumping = false;
             AgainstWall = false;
             wallCheck.AgainstWall = false;
 
@@ -363,7 +365,6 @@ public class PlayerMovement : MonoBehaviour
             Debug.Log("InputLock = " + Paused);
         }
     }
-
 
 
     //***********************************************************************

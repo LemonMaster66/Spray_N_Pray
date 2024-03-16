@@ -3,7 +3,12 @@ guid: fae9f4e980f8dda4a80f0b3959ff2acb
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Revolver_Base_Color
+    second: {fileID: 2100000, guid: e77f682c7e65f3d4789ff5d18a3e0ea2, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
