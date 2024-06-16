@@ -35,7 +35,7 @@ public class Gun : MonoBehaviour
     public float Knockback;                  // The Force Applied to the Target from 1 Bullet             |  0 = None
     public int   RicochetCount;              // The Number of Times it Bounces before Destroying          |  0 = None
     public float RicochetMultiplier = 1;     // The Damage Multiplier Per Ricochet                        |  0 = None
-    public int   PierceCount;             // The Amount of Targets it Pierces Through                  |  0 = None
+    public int   PierceCount;                // The Amount of Targets it Pierces Through                  |  0 = None
 
     [Header("Projectile Properties")]
     public bool  InheritVelocity;            // Adds the Players Velocity to the Projectile
