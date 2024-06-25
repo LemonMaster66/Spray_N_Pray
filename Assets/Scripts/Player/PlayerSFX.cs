@@ -139,5 +139,18 @@ public class PlayerSFX : MonoBehaviour
             if(audioSource.clip == audioClip) Destroy(audioSource.gameObject);
         }
     }
+
+    public void SetValues(AudioClip audioClip, float Volume = 1, float Pitch = 1, float PitchVariation = 0, bool Loop = false)
+    {
+        AudioSource[] audioSources = GetComponentsInChildren<AudioSource>();
+        foreach(AudioSource audioSource in audioSources)
+        {
+            if(audioSource.clip == audioClip)
+            {
+                audioSource.volume   = Volume;
+                audioSource.pitch    = Pitch + UnityEngine.Random.Range(-PitchVariation, PitchVariation);
+            }
+        }
+    }
 }
 
